@@ -4,9 +4,29 @@ import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
 import "react-calendar/dist/Calendar.css";
 
+const Calendar = dynamic(() => import('react-calendar'), { ssr: false });
 
 export default function Home() {
   const router = useRouter();
+
+  const [date, setDate] = useState(null);
+  
+    const [reminders, setReminders] = useState({});
+  
+    useEffect(() => {
+      setDate(new Date());
+    }, []);
+  
+    const handleDateClick = (selectedDate) => {
+      const reminder = prompt("Enter a reminder:");
+      if (reminder) {
+        setReminders((prev) => ({
+          ...prev,
+          [selectedDate.toDateString()]: reminder,
+        }));
+      }
+    };
+
 
   return (
     <div className="min-h-screen bg-white p-5">
@@ -47,10 +67,27 @@ export default function Home() {
         <div className="bg-gray-300 p-4 rounded-lg col-span-6">
           <h2 className="font-bold mb-2 text-black">Reminder / Calendar</h2>
           <div className="mt-4 bg-gray-400 p-4 rounded flex gap-4">
+             {/*Calendar */}
+            {date && (
+              <div className="bg-white p-3 rounded shadow-md text-black">
+                <Calendar
+                  onChange={setDate}
+                  value={date}
+                  onClickDay={handleDateClick}
+                  className="rounded"
+                  locale="en-GB" 
+                />
+              </div>
+            )}
 
             {/* Reminders */}
             <div className="flex-1 p-3 bg-white rounded shadow-md text-black">
               <h3 className="text-black font-bold mb-2">Reminders:</h3>
+              {date && reminders[date.toDateString()] ? (
+                   <p>{reminders[date.toDateString()]}</p>
+               ) : (
+                 <p>No reminders</p>
+               )}
             </div>
           </div>
         </div>
