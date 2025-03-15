@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.common-border {
+    @apply border-[1px] border-zinc-200 shadow-sm shadow-zinc-100 
+}
