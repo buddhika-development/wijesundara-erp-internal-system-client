@@ -46,7 +46,7 @@ export default function TransactionsPage() {
         </button>
 
         <button
-          onClick={() => router.push("/transactions/Transportation")}
+          onClick={() => router.push("/Transactions/Transportation")}
           className="h-24 bg-red-300 rounded-lg flex items-center justify-center text-white text-lg"
         >
           Transportation
