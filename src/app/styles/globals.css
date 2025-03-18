@@ -12,11 +12,11 @@
   --base-background : #F6F8FF;
   --card-background : #DADEF4;
   --link-background : #E5E8FE;
-  --table-header-background: #6A749B;
+  --table-header-background: #e6e9f7;
 
   --card-stroke : #b7bfdf;
   --input-stroke : #C3CBEC;
-  --common-stroke : #B1BAE4;
+  --common-stroke : #e1e5f6;
 }
 
 body {

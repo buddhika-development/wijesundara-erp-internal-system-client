@@ -4,17 +4,21 @@
 
 /* Then the rest of your CSS rules */
 .common-border {
-    @apply border-[1px] border-zinc-200 shadow-sm shadow-zinc-100;
+    border: 1px solid var(--common-stroke);
 }
 
 /* table design============================ */
+table{
+    width: 100%;
+}
+
 tr {
     height: 50px;
-    border-bottom: 1px solid #cecee2;
+    border-bottom: 1px solid var(--common-stroke);
 }
 
 td, th {
-    padding-left: 12px;
+    padding-left: 16px;
 }
 
 /* stats card styles */
@@ -45,5 +49,20 @@ td, th {
 .secondary-stat{
     display: grid;
     grid-template-columns: 1fr 1fr 2fr;
-    gap: 16px;
+    column-gap: 16px;
+}
+
+
+
+/* table of content styles =======================  */
+.table-content{
+    background-color: white;
+    padding : 24px 32px;
+    border: 1px solid var(--common-stroke);
+    border-radius: 20px;
+}
+
+.table-content table thead{
+    background-color: var(--table-header-background);
+    border: none;
 }
