@@ -3,3 +3,14 @@
 .common-border {
     @apply border-[1px] border-zinc-200 shadow-sm shadow-zinc-100 
 }
+
+/* table design============================ */
+
+tr{
+    height: 50px;
+    border-bottom: 1px solid #cecee2;
+}
+
+td, th {
+    padding-left: 12px;
+}

@@ -3,12 +3,14 @@ import Sidebar from "@/components/layouts/StockManagement/Sidebar"
 
 const StockManagementLayout = ({children}) => {
     return(
-        <div>
+        <div className="h-full">
             <Header />  
             <main>
                 <div className="flex w-full h-full">
                     <Sidebar />
-                    {children}
+                    <div className="w-full h-full">
+                        {children}
+                    </div>
                 </div>
             </main>
         </div>
