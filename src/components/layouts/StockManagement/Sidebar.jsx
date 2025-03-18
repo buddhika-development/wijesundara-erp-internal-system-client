@@ -4,7 +4,7 @@ import { MdOutlineSpaceDashboard } from "react-icons/md";
 
 const Sidebar = () => {
   return (
-    <div className='w-[250px] h-[100vh] common-border pt-4 px-4 bg-white'>
+    <div className='w-[250px] fixed top-[80px] left-0 h-[calc(100vh-80px)] common-border pt-4 px-4 bg-white'>
         <div className="stock-manager-functionalities flex flex-col gap-y-2">
             <SideBarLink link_content='Dashboard' link='./' />
             <SideBarLink link_content='Stocks' link='./StockManager/Stock'/>

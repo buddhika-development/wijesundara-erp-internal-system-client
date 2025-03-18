@@ -1,16 +1,49 @@
+/* All @import statements must be at the top */
+@import url('./globals.css');
 @import "tailwindcss";
 
+/* Then the rest of your CSS rules */
 .common-border {
-    @apply border-[1px] border-zinc-200 shadow-sm shadow-zinc-100 
+    @apply border-[1px] border-zinc-200 shadow-sm shadow-zinc-100;
 }
 
 /* table design============================ */
-
-tr{
+tr {
     height: 50px;
     border-bottom: 1px solid #cecee2;
 }
 
 td, th {
     padding-left: 12px;
+}
+
+/* stats card styles */
+.LargeStatCard {
+    background-color: var(--card-background);
+    width: 100%;
+    padding: 32px 24px;
+    border: 1px solid var(--card-stroke);
+    border-radius: 12px;
+}
+
+.SmallStatCard{
+    background-color: var(--card-background);
+    width: 100%;
+    padding: 32px 24px;
+    border: 1px solid var(--card-stroke);
+    border-radius: 12px;
+}
+
+.stat-card-header-text {
+    color: var(--secondary-text);
+}
+
+.units {
+    color: var(--secondary-text);
+}
+
+.secondary-stat{
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 16px;
 }
