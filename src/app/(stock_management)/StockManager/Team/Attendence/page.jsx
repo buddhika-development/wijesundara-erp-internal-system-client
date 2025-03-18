@@ -1,24 +1,17 @@
 import SecondaryHeader from '@/components/layouts/SecondaryHeader'
 import StockManagementAtendence from '@/components/layouts/StockManagement/StockManagementTeam/StockManagementAtendence'
 import Title from '@/components/ui/Titles/Title'
+import { TeamNavigations } from '@/Navigations'
 import React from 'react'
 
-const teamPageLinks = [
-  {
-    'link-content' : 'Team',
-    'link' : './Team'
-  },
-  {
-    'link-content' : 'Attendece',
-    'link' :'./Team/Attendence'
-  }
-]
-
 const page = () => {
+
+  const TEAM_NAVIGATION = TeamNavigations;
+
   return (
     <div className='h-full'>
 
-      <SecondaryHeader links={teamPageLinks} />
+      <SecondaryHeader links={TeamNavigations} />
 
       <div className="page-body-content  p-4">
         

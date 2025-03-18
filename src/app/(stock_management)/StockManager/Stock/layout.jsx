@@ -1,31 +1,15 @@
 import SecondaryHeader from '@/components/layouts/SecondaryHeader'
+import { StockNavigation } from '@/Navigations'
 import React from 'react'
 
-const stockManagementLinks = [
-    {
-        'link-content' : 'Dashboard',
-        'link' : './'
-    },
-    {
-        'link-content' : 'Stocks',
-        'link' : './Stocks'
-    },
-    {
-        'link-content' : 'Checkouts',
-        'link' : './Stock/StockCheckout'
-    },
-    {
-        'link-content' : 'Arrivals',
-        'link' : './Stock/StockArrival'
-    }
-]
+const STOCK_MANAGEMENT_STOCK_NAVIGATIONS = StockNavigation;
 
 const layout = ({children}) => {
   return (
     <div>
         
         {/* Sub header section */}
-        <SecondaryHeader links={stockManagementLinks} />
+        <SecondaryHeader links={STOCK_MANAGEMENT_STOCK_NAVIGATIONS} />
 
         {/* body content */}
         <div className='p-4'>

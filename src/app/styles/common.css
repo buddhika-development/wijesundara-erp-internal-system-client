@@ -10,6 +10,7 @@
 /* table design============================ */
 table{
     width: 100%;
+    font-size: 14px;
 }
 
 tr {
@@ -40,6 +41,7 @@ td, th {
 
 .stat-card-header-text {
     color: var(--secondary-text);
+    font-size: 14px;
 }
 
 .units {
