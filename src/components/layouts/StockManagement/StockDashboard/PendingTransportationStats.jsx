@@ -2,6 +2,7 @@ import Title from '@/components/ui/Titles/Title'
 import React from 'react'
 
 const PendingTransportationStats = () => {
+    
     return (
         <div className='w-full'>
             <div className='table-content w-full'>

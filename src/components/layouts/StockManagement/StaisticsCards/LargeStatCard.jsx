@@ -1,6 +1,7 @@
 import React from 'react'
 
 const LargeStatCard = ({title = "Stock stat card header", stock = 1000}) => {
+  
   return (
     <div className='LargeStatCard'>
 
