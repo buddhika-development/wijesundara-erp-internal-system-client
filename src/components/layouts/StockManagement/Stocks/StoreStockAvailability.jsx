@@ -1,7 +1,7 @@
 import Title from '@/components/ui/Titles/Title'
+import React from 'react'
 
-const AvailableStockDetails = () => {
-    
+const StoreStockAvailability = () => {
   return (
     <div className='table-content w-full'>
         <Title title_content='Available Stock Details' />
@@ -37,9 +37,8 @@ const AvailableStockDetails = () => {
                 </tr>
             </tbody>
         </table>
-        
     </div>
   )
 }
 
-export default AvailableStockDetails
+export default StoreStockAvailability

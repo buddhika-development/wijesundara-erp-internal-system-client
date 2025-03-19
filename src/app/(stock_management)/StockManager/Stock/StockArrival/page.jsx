@@ -1,8 +1,19 @@
+import StockTransporationStats from '@/components/layouts/StockManagement/StockDashboard/StockTransporationStats'
+import Title from '@/components/ui/Titles/Title'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+
+      <Title />
+
+      {/* Main body content area */}
+      <div>
+        <StockTransporationStats />
+      </div>
+      
+    </div>
   )
 }
 

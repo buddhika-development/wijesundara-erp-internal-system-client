@@ -1,3 +1,4 @@
+import StockTransporationStats from '@/components/layouts/StockManagement/StockDashboard/StockTransporationStats'
 import StockCheckoutDetails from '@/components/layouts/StockManagement/StockDetails/StockCheckoutDetails'
 import Title from '@/components/ui/Titles/Title'
 import React from 'react'
@@ -11,6 +12,9 @@ const page = () => {
 
       {/* body content */}
       <div className="body-content">
+
+        <StockTransporationStats />
+        
         <StockCheckoutDetails />
       </div>
       

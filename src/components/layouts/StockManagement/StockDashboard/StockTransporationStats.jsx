@@ -5,9 +5,9 @@ const StockTransporationStats = () => {
     return (
         <div>
             <div className='secondary-stat'>
-                <SmallStatCard />
-                <SmallStatCard />
-                <SmallStatCard />
+                <SmallStatCard title='Pending Arrivals' />
+                <SmallStatCard title='Pending confirmations' />
+                <SmallStatCard title='Total stock miss balnaces' />
             </div>
         </div>
     )

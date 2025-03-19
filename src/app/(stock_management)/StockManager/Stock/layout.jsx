@@ -12,7 +12,7 @@ const layout = ({children}) => {
         <SecondaryHeader links={STOCK_MANAGEMENT_STOCK_NAVIGATIONS} />
 
         {/* body content */}
-        <div className='p-4'>
+        <div className='p-4 w-full'>
             {children}
         </div>
         

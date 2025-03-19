@@ -5,10 +5,10 @@ const StockStatistics = () => {
     return (
         <div>
             <div className='flex justify-between gap-x-[16px]'>
-                <LargeStatCard />
-                <LargeStatCard />
-                <LargeStatCard />
-                <LargeStatCard />
+                <LargeStatCard title='Ready stock availability' />
+                <LargeStatCard title='Processing stock' />
+                <LargeStatCard title='Ready to delivery' />
+                <LargeStatCard title='Total stock amount' />
             </div>
         </div>
     )
