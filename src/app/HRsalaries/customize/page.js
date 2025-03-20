@@ -17,7 +17,7 @@ export default function CustomizeSalaryFormula() {
     fetchJobRoles();
   }, []);
 
-    const fetchJobRoles = async () => {
+  const fetchJobRoles = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/jobrole");
       setJobRoles(response.data);
@@ -27,7 +27,6 @@ export default function CustomizeSalaryFormula() {
     }
   };
 
-  //edit button
   const handleEditClick = (jobRole) => {
     setEditJobRole(jobRole);
     setFormData({
@@ -38,12 +37,11 @@ export default function CustomizeSalaryFormula() {
     setError(null);
   };
 
-  //input changes hadle
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value === "" ? "" : Number(value), 
+      [name]: value === "" ? "" : Number(value),
     }));
   };
 
@@ -64,7 +62,6 @@ export default function CustomizeSalaryFormula() {
       setJobRoles((prev) =>
         prev.map((jr) => (jr._id === editJobRole._id ? response.data : jr))
       );
-        //close form
       setEditJobRole(null);
       setFormData({
         job_role_salary: "",
@@ -80,51 +77,53 @@ export default function CustomizeSalaryFormula() {
   };
 
   return (
-    <div className="p-5">
-      <h1 className="text-2xl font-bold mb-4">Customize Salary Formula</h1>
+    <div className="min-h-screen bg-[#F6F8FF] p-5">
+      <h1 className="text-2xl font-bold mb-4 text-black">Customize Salary Formula</h1>
 
       {/* Job Roles Table */}
-      <table className="w-full border-collapse border border-gray-300 mb-4">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-2 text-black">ID</th>
-            <th className="border p-2 text-black">Job Role</th>
-            <th className="border p-2 text-black">Base Salary</th>
-            <th className="border p-2 text-black">Monthly Bonus</th>
-            <th className="border p-2 text-black">Attendance Bonus/Day</th>
-            <th className="border p-2 text-black">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {jobRoles.map((jr) => (
-            <tr key={jr._id} className="border">
-              <td className="border p-2">{jr.job_role_id}</td>
-              <td className="border p-2">{jr.job_role_name}</td>
-              <td className="border p-2">{jr.job_role_salary.toLocaleString()}</td>
-              <td className="border p-2">{jr.monthly_bonus.toLocaleString()}</td>
-              <td className="border p-2">{jr.attendance_bonus_per_extra_day.toLocaleString()}</td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleEditClick(jr)}
-                  className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600"
-                >
-                  Edit
-                </button>
-              </td>
+      <div className="bg-gray-300 p-4 rounded-lg mb-6">
+        <table className="w-full border-collapse border border-gray-500">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-500 p-2 text-black">ID</th>
+              <th className="border border-gray-500 p-2 text-black">Job Role</th>
+              <th className="border border-gray-500 p-2 text-black">Base Salary</th>
+              <th className="border border-gray-500 p-2 text-black">Monthly Bonus</th>
+              <th className="border border-gray-500 p-2 text-black">Attendance Bonus/Day</th>
+              <th className="border border-gray-500 p-2 text-black">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {jobRoles.map((jr) => (
+              <tr key={jr._id} className="border border-gray-500 bg-white">
+                <td className="border border-gray-500 p-2 text-black">{jr.job_role_id}</td>
+                <td className="border border-gray-500 p-2 text-black">{jr.job_role_name}</td>
+                <td className="border border-gray-500 p-2 text-black">{jr.job_role_salary.toLocaleString()}</td>
+                <td className="border border-gray-500 p-2 text-black">{jr.monthly_bonus.toLocaleString()}</td>
+                <td className="border border-gray-500 p-2 text-black">{jr.attendance_bonus_per_extra_day.toLocaleString()}</td>
+                <td className="border border-gray-500 p-2">
+                  <button
+                    onClick={() => handleEditClick(jr)}
+                    className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Edit Form */}
       {editJobRole && (
-        <div className="border p-4 rounded text-black bg-gray-50 mb-4">
+        <div className="border border-gray-500 p-4 rounded-lg bg-gray-300 mb-4">
           <h2 className="text-xl font-semibold mb-2 text-black">
             Edit Salary Formula for {editJobRole.job_role_name}
           </h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700" htmlFor="job_role_salary">
+              <label className="block text-sm font-medium text-black" htmlFor="job_role_salary">
                 Base Salary
               </label>
               <input
@@ -135,12 +134,12 @@ export default function CustomizeSalaryFormula() {
                 onChange={handleInputChange}
                 min="0"
                 step="1"
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                className="mt-1 p-2 border border-gray-500 rounded w-full bg-white text-black"
                 required
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700" htmlFor="monthly_bonus">
+              <label className="block text-sm font-medium text-black" htmlFor="monthly_bonus">
                 Monthly Bonus
               </label>
               <input
@@ -151,13 +150,13 @@ export default function CustomizeSalaryFormula() {
                 onChange={handleInputChange}
                 min="0"
                 step="1"
-                className="mt-1 p-2 border text-black border-gray-300 rounded w-full"
+                className="mt-1 p-2 border border-gray-500 rounded w-full bg-white text-black"
                 required
               />
             </div>
             <div className="mb-4">
               <label
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-black"
                 htmlFor="attendance_bonus_per_extra_day"
               >
                 Attendance Bonus Per Extra Day
@@ -170,7 +169,7 @@ export default function CustomizeSalaryFormula() {
                 onChange={handleInputChange}
                 min="0"
                 step="1"
-                className="mt-1 p-2 border text-black border-gray-300 rounded w-full"
+                className="mt-1 p-2 border border-gray-500 rounded w-full bg-white text-black"
                 required
               />
             </div>
@@ -179,8 +178,8 @@ export default function CustomizeSalaryFormula() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`bg-blue-500 text-white py-2 px-4 rounded ${
-                  loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+                className={`bg-red-500 text-white py-2 px-4 rounded ${
+                  loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
                 }`}
               >
                 {loading ? "Saving..." : "Save Changes"}
@@ -196,6 +195,13 @@ export default function CustomizeSalaryFormula() {
           </form>
         </div>
       )}
+
+      {/* <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+        .min-h-screen {
+          font-family: 'Poppins', sans-serif;
+        }
+      `}</style> */}
     </div>
   );
 }

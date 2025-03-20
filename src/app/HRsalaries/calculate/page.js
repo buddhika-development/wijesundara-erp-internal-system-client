@@ -25,7 +25,6 @@ export default function ViewSalary() {
     }
   };
 
-  //fetch salary data
   const fetchSalary = async (employeeId, selectedYear, selectedMonth) => {
     setLoading(true);
     setError(null);
@@ -61,13 +60,13 @@ export default function ViewSalary() {
   };
 
   return (
-    <div className="p-5">
-      <h1 className="text-2xl font-bold mb-4">View Employee Salary</h1>
+    <div className="min-h-screen bg-[#F6F8FF] p-5">
+      <h1 className="text-2xl font-bold mb-4 text-black">View Employee Salary</h1>
 
-      {/* select year and month*/}
-      <div className="mb-4 flex gap-4">
+      {/* select year and month */}
+      <div className="mb-4 flex gap-4 bg-gray-300 p-4 rounded-lg">
         <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="year">
+          <label className="block text-sm font-medium text-black" htmlFor="year">
             Year
           </label>
           <input
@@ -80,11 +79,11 @@ export default function ViewSalary() {
             }}
             min="2000"
             max={new Date().getFullYear()}
-            className="mt-1 p-2 border border-gray-300 rounded w-24"
+            className="mt-1 p-2 border border-gray-500 rounded w-24 bg-white text-black"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="month">
+          <label className="block text-sm font-medium text-black" htmlFor="month">
             Month
           </label>
           <select
@@ -94,7 +93,7 @@ export default function ViewSalary() {
               setMonth(e.target.value);
               handleDateChange();
             }}
-            className="mt-1 p-2 border border-gray-300 rounded"
+            className="mt-1 p-2 border border-gray-500 rounded bg-white text-black"
           >
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i + 1} value={(i + 1).toString().padStart(2, "0")}>
@@ -106,96 +105,99 @@ export default function ViewSalary() {
       </div>
 
       {/* Employee List */}
-      <table className="w-full border-collapse border border-gray-300 mb-4">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-2 text-black">ID</th>
-            <th className="border p-2 text-black">Name</th>
-            <th className="border p-2 text-black">Select</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((emp) => (
-            <tr key={emp._id} className="border">
-              <td className="border p-2">{emp.employee_id}</td>
-              <td className="border p-2">{emp.employee_name}</td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleEmployeeSelect(emp._id)}
-                  className={`py-1 px-3 rounded ${
-                    selectedEmployee?._id === emp._id
-                      ? "bg-blue-700 text-white"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
-                  }`}
-                >
-                  {selectedEmployee?._id === emp._id ? "Selected" : "View"}
-                </button>
-              </td>
+      <div className="bg-gray-300 p-4 rounded-lg mb-6">
+        <table className="w-full border-collapse border border-gray-500">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-500 p-2 text-black">ID</th>
+              <th className="border border-gray-500 p-2 text-black">Name</th>
+              <th className="border border-gray-500 p-2 text-black">Select</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {employees.map((emp) => (
+              <tr key={emp._id} className="border border-gray-500 bg-white">
+                <td className="border border-gray-500 p-2 text-black">{emp.employee_id}</td>
+                <td className="border border-gray-500 p-2 text-black">{emp.employee_name}</td>
+                <td className="border border-gray-500 p-2">
+                  <button
+                    onClick={() => handleEmployeeSelect(emp._id)}
+                    className={`py-1 px-3 rounded ${
+                      selectedEmployee?._id === emp._id
+                        ? "bg-red-600 text-white"
+                        : "bg-red-500 text-white hover:bg-red-600"
+                    }`}
+                  >
+                    {selectedEmployee?._id === emp._id ? "Selected" : "View"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Salary Details */}
-      {loading && <p>Loading salary details...</p>}
+      {loading && <p className="text-black">Loading salary details...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {salaryData && (
-        <div className="border p-4 rounded bg-gray-50">
-          <h2 className="text-xl font-semibold mb-2">
+        <div className="border border-gray-500 p-4 rounded-lg bg-gray-300">
+          <h2 className="text-xl font-semibold mb-2 text-black">
             Salary Details for {selectedEmployee?.employee_name} ({salaryData.month})
           </h2>
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse border border-gray-500">
             <tbody>
-              <tr>
-                <td className="border p-2 font-medium text-black">Job Role</td>
-                <td className="border p-2 text-black">{salaryData.job_role}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Job Role</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.job_role}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Base Salary</td>
-                <td className="border p-2 text-black">{salaryData.baseSalary.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Base Salary</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.baseSalary.toLocaleString()}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Total Days Attended</td>
-                <td className="border p-2 text-black">{salaryData.totalDaysAttended}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Total Days Attended</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.totalDaysAttended}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Extra Days</td>
-                <td className="border p-2 text-black">{salaryData.extraDays}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Extra Days</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.extraDays}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Attendance Bonus</td>
-                <td className="border p-2 text-black">{salaryData.attendanceBonus.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Attendance Bonus</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.attendanceBonus.toLocaleString()}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Monthly Bonus</td>
-                <td className="border p-2 text-black">{salaryData.monthlyBonus.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Monthly Bonus</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.monthlyBonus.toLocaleString()}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Employee EPF</td>
-                <td className="border p-2 text-black">{salaryData.employeeEPF.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Employee EPF</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.employeeEPF.toLocaleString()}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Employer EPF</td>
-                <td className="border p-2 text-black">{salaryData.employerEPF.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Employer EPF</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.employerEPF.toLocaleString()}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Employer ETF</td>
-                <td className="border p-2 text-black">{salaryData.employerETF.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Employer ETF</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.employerETF.toLocaleString()}</td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Net Salary</td>
-                <td className="border p-2 font-bold text-black">
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Net Salary</td>
+                <td className="border border-gray-500 p-2 font-bold text-black">
                   {salaryData.netSalary.toLocaleString()}
                 </td>
               </tr>
-              <tr>
-                <td className="border p-2 font-medium text-black">Total Employer Cost</td>
-                <td className="border p-2 text-black">{salaryData.totalEmployerCost.toLocaleString()}</td>
+              <tr className="bg-white">
+                <td className="border border-gray-500 p-2 font-medium text-black">Total Employer Cost</td>
+                <td className="border border-gray-500 p-2 text-black">{salaryData.totalEmployerCost.toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
         </div>
       )}
+
     </div>
   );
 }
