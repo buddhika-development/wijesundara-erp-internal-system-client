@@ -106,7 +106,14 @@ export default function Home() {
 
       {/* Styling */}
       <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+        .min-h-screen {
+          background-color: #F6F8FF;
+          font-family: 'Poppins', sans-serif;
+        }
         .btn-light {
+
+
           display: block;
           width: 100%;
           background-color: white;
@@ -117,9 +124,11 @@ export default function Home() {
           border-radius: 5px;
           text-align: center;
           cursor: pointer;
+          font-family: 'Poppins', sans-serif;
         }
         .btn-light:hover {
           background-color: #e0e0e0;
+          border: 1px solid black;
         }
       `}</style>
     </div>
