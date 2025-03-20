@@ -5,7 +5,7 @@ const SmallStatCard = ({title= 'Small stat card title', amount = 10}) => {
         <div className='SmallStatCard mt-[20px] flex items-center'>
             {/* card header section */}
             <div className="card-header flex items-center gap-[16px]">
-                <div className='h-[50px] w-[50px] bg-red-200 rounded-full'></div>
+                <div className='h-[50px] w-[50px] bg-white border=[1px] border-blue-200 rounded-full'></div>
                 <p className='w-2/3 stat-card-header-text'>{title}</p>
             </div>
 

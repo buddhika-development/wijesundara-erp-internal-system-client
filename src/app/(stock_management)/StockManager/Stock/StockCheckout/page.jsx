@@ -1,3 +1,5 @@
+import FullPendingConfirmation from '@/components/layouts/StockManagement/StockDashboard/FullPendingConfirmation'
+import PendingConfirmations from '@/components/layouts/StockManagement/StockDashboard/PendingConfirmations'
 import StockTransporationStats from '@/components/layouts/StockManagement/StockDashboard/StockTransporationStats'
 import StockCheckoutDetails from '@/components/layouts/StockManagement/StockDetails/StockCheckoutDetails'
 import Title from '@/components/ui/Titles/Title'
@@ -15,7 +17,7 @@ const page = () => {
 
         <StockTransporationStats />
         
-        <StockCheckoutDetails />
+        <FullPendingConfirmation /> 
       </div>
       
     </div>

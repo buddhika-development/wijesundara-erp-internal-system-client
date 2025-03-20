@@ -15,10 +15,10 @@ export const MainNavigations = [
         'link-content' : 'Infrastructures',
         'link' : `${WEBSITE_URI}/StockManager/Infrastructures`
     },
-    {
-        'link-content' : 'Team',
-        'link' : `${WEBSITE_URI}/StockManager/Team`
-    }
+    // {
+    //     'link-content' : 'Team',
+    //     'link' : `${WEBSITE_URI}/StockManager/Team`
+    // }
 ]
 
 
@@ -38,6 +38,10 @@ export const StockNavigation = [
     {
         'link-content' : 'Arrivals',
         'link' :`${WEBSITE_URI}/StockManager/Stock/StockArrival`
+    },
+    {
+        'link-content' : 'Add Stock',
+        'link' :`${WEBSITE_URI}/StockManager/Stock/AddStock`
     }
 ]
 

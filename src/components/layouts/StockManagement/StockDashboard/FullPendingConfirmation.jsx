@@ -3,7 +3,7 @@
 import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
 
-const PendingConfirmations = () => {
+const FullPendingConfirmation = () => {
 
     const [travels, setTravels] = useState([])
     const [isLoading, setLoading] = useState(true)
@@ -81,7 +81,6 @@ const PendingConfirmations = () => {
                                         </tr>
                                     ))
                                 }
-
                             </tbody>
                         </table>
 
@@ -96,4 +95,4 @@ const PendingConfirmations = () => {
     )
 }
 
-export default PendingConfirmations
+export default FullPendingConfirmation

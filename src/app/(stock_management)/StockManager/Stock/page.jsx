@@ -1,9 +1,10 @@
+import AvailableStockDetails from '@/components/layouts/StockManagement/StockDashboard/AvailableStockDetails'
 import PendingArrivalsDetails from '@/components/layouts/StockManagement/StockDashboard/PendingArrivalsDetails'
 import PendingConfirmations from '@/components/layouts/StockManagement/StockDashboard/PendingConfirmations'
+import ProcessedStockDetails from '@/components/layouts/StockManagement/StockDashboard/ProcessedStockDetails'
 import StockStatistics from '@/components/layouts/StockManagement/StockDashboard/StockStatistics'
-import MissingStockDetails from '@/components/layouts/StockManagement/Stocks/MissingStockDetails'
+import WaitingStockDetails from '@/components/layouts/StockManagement/StockDashboard/WaitingStockDetails'
 import StockAvailability from '@/components/layouts/StockManagement/Stocks/StockAvailability'
-import StockProcessingStats from '@/components/layouts/StockManagement/Stocks/StockProcessingStats'
 import Title from '@/components/ui/Titles/Title'
 import React from 'react'
 
@@ -21,12 +22,12 @@ const page = () => {
       {/* basic stock details analysis */}
       <div className='w-full'>
         <div className='flex gap-x-5 mt-4'>
+          <AvailableStockDetails />
           <StockAvailability />
-          <StockProcessingStats />
         </div>
         <div className='flex gap-x-5 mt-4'>
-          <StockAvailability />
-          <MissingStockDetails />
+          <ProcessedStockDetails />
+          <WaitingStockDetails />
         </div>
       </div>
 

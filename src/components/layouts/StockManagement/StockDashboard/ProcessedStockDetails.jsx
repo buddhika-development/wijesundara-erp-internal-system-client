@@ -3,7 +3,7 @@
 import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
 
-const StockAvailability = () => {
+const ProcessedStockDetails = () => {
 
     const [stock, setStock] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -21,7 +21,7 @@ const StockAvailability = () => {
                 }
 
                 const stock_details = await stock_response.json()
-                const temp_data = stock_details.filter((item) => item["stock_status"] === "processing")
+                const temp_data = stock_details.filter((item) => item["stock_status"] === "processed")
                 setStock(temp_data)
                 
             }
@@ -81,4 +81,4 @@ const StockAvailability = () => {
   )
 }
 
-export default StockAvailability
+export default ProcessedStockDetails

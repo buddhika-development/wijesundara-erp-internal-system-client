@@ -50,11 +50,21 @@ const StockTransporationStats = () => {
     
     return (
         <div>
-            <div className='secondary-stat'>
-                <SmallStatCard title='Total waiting travels ' amount={totalWaitingTravels.length} />
-                <SmallStatCard title='Pending confirmations' amount={totalProcessingTravels.length} />
-                <SmallStatCard title='Total active transporations' amount={transportionTask.length} />
-            </div>
+            {
+                isLoading ? (
+                    <p>Loading.........</p>
+                )
+                : error ? (
+                    <p>{error}</p>
+                )
+                : (
+                    <div className='secondary-stat'>
+                        <SmallStatCard title='Total waiting travels ' amount={totalWaitingTravels.length} />
+                        <SmallStatCard title='Pending confirmations' amount={totalProcessingTravels.length} />
+                        <SmallStatCard title='Total active transporations' amount={transportionTask.length} />
+                    </div>
+                )
+            }
         </div>
     )
 }

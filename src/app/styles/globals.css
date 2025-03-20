@@ -15,8 +15,10 @@
   --table-header-background: #e6e9f7;
 
   --card-stroke : #b7bfdf;
-  --input-stroke : #C3CBEC;
+  --input-stroke : #d9dff4;
   --common-stroke : #e1e5f6;
+
+  --submit-button-color : #ce7d21;
 }
 
 body {

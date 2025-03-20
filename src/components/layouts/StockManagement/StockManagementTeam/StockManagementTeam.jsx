@@ -7,11 +7,11 @@ const StockManagementTeam = () => {
 
       {/* top section in the application */}
       <div className="title-section">
-        <Title />
+        <Title title_content='Team Details' />
       </div>
 
       {/* content section in webpage */}
-      <div className="employee-details">
+      <div className="employee-details table-content mt-5">
         <table className='w-full text-left mt-4'>
           <thead>
             <tr className='border-[1px] common-border bg-blue-50'>

@@ -3,7 +3,7 @@
 import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
 
-const PendingArrivalsDetails = () => {
+const FullPendingArrivalsDetails = () => {
 
     const [arrivals, setArrivals] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -16,9 +16,7 @@ const PendingArrivalsDetails = () => {
 
                 if (arrivals_response.ok) {
                     const arrival_detilas = await arrivals_response.json()
-
-                    const temp_data = arrival_detilas.slice(1,6)
-                    setArrivals(temp_data)
+                    setArrivals(arrival_detilas)
                 }
                 else {
                     throw new Error("Something went wrong in data fetching.....")
@@ -96,4 +94,4 @@ const PendingArrivalsDetails = () => {
     )
 }
 
-export default PendingArrivalsDetails
+export default FullPendingArrivalsDetails
