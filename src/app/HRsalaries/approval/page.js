@@ -10,6 +10,7 @@ export default function MonthlySalarySummary() {
   const [totalSalary, setTotalSalary] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [requestSent, setRequestSent] = useState(false);
 
   useEffect(() => {
     fetchEmployees();
@@ -21,18 +22,14 @@ export default function MonthlySalarySummary() {
     }
   }, [year, month, employees]);
 
-
   const fetchEmployees = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/employee");
-
-      //to get only the employees whose currently working only working in the company
-
-      const activeEmployees =response.data.filter(emp => emp.employee_status === 'active');
+      const activeEmployees = response.data.filter(emp => emp.employee_status.toLowerCase() === 'active');
       setEmployees(activeEmployees);
     } catch (error) {
-      console.error("error getting active employees:", error);
-      setError("failed load active employees");
+      console.error("Error getting active employees:", error);
+      setError("Failed to load active employees");
     }
   };
 
@@ -50,13 +47,11 @@ export default function MonthlySalarySummary() {
             employee_name: emp.employee_name,
             monthly_salary: res.data.totalEmployerCost,
           }))
-          .catch((err) => {
-            return {
-              employee_id: emp._id,
-              employee_name: emp.employee_name,
-              monthly_salary: 0,
-            };
-          })
+          .catch((err) => ({
+            employee_id: emp._id,
+            employee_name: emp.employee_name,
+            monthly_salary: 0,
+          }))
       );
 
       const salaryData = await Promise.all(salaryPromises);
@@ -64,8 +59,29 @@ export default function MonthlySalarySummary() {
       setSalaries(salaryData);
       setTotalSalary(total);
     } catch (error) {
-      console.error("error getting the salaries:", error);
-      setError("failed to get the  salary summary");
+      console.error("Error getting the salaries:", error);
+      setError("Failed to fetch salary summary");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendApproval = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const monthName = new Date(0, parseInt(month) - 1).toLocaleString("default", { month: "long" });
+      const response = await axios.post("http://localhost:5000/api/salary/requestApproval", {
+        year,
+        month: monthName,
+        totalSalary,
+      });
+      console.log("Approval request response:", response.data);
+      setRequestSent(true);
+      alert("Salary approval request sent successfully!");
+    } catch (error) {
+      console.error("Error sending approval request:", error);
+      setError(error.response?.data?.error || "Failed to send approval request");
     } finally {
       setLoading(false);
     }
@@ -109,10 +125,23 @@ export default function MonthlySalarySummary() {
           </select>
         </div>
       </div>
-      {loading && <p className="text-black p-4">Loading salary summary...</p>}
-      {error && <p className="text-red-500 p-4">{error}</p>}
 
-      {/*salary summary*/}
+      {/* Loading, Error, and Success States */}
+      {loading && (
+        <p className="text-black p-4 flex items-center">
+          <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="gray" strokeWidth="4" fill="none" />
+            <path fill="black" d="M4 12a8 8 0 018-8v8h-8z" />
+          </svg>
+          Loading...
+        </p>
+      )}
+      {error && <p className="text-red-500 p-4">{error}</p>}
+      {!loading && !error && salaries.length === 0 && (
+        <p className="text-black p-4">No active employees or salary data for this month.</p>
+      )}
+
+      {/* Salary Summary */}
       {salaries.length > 0 && (
         <div className="bg-gray-300 p-4 rounded-lg">
           <table className="w-full border-collapse bg-white rounded">
@@ -139,6 +168,17 @@ export default function MonthlySalarySummary() {
               </tr>
             </tbody>
           </table>
+
+          {/* Send for Approval Button */}
+          <div className="mt-4">
+            <button
+              onClick={handleSendApproval}
+              className={`btn-light w-48 ${loading || requestSent ? "opacity-50 cursor-not-allowed" : ""}`}
+              disabled={loading || requestSent}
+            >
+              {requestSent ? "Request Sent" : "Send for Approval"}
+            </button>
+          </div>
         </div>
       )}
 
@@ -161,7 +201,7 @@ export default function MonthlySalarySummary() {
           cursor: pointer;
           font-family: 'Poppins', sans-serif;
         }
-        .btn-light:hover {
+        .btn-light:hover:not(:disabled) {
           background-color: #e0e0e0;
           border: 1px solid black;
         }
