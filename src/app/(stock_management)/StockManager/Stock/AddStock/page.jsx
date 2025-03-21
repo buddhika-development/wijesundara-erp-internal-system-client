@@ -108,7 +108,7 @@ const page = () => {
 
                             {
                                 state.success && (
-                                    <p className='bg-green-100 border-[1px] border-green-200 text-sm text-green-800 py-2.5 rounded-lg text-center'>{state.message}</p>
+                                    <p className='bg-green-100 border-[1px] border-green-200 text-sm text-green-800 py-2.5 rounded-lg text-center mt-2'>{state.message}</p>
                                 )
                             }
                         </div>

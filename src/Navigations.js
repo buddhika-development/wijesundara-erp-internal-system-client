@@ -32,11 +32,11 @@ export const StockNavigation = [
         'link' :`${WEBSITE_URI}/StockManager/Stock/Stocks`
     },
     {
-        'link-content' : 'Checkout',
+        'link-content' : 'Transporations',
         'link' :`${WEBSITE_URI}/StockManager/Stock/StockCheckout`
     },
     {
-        'link-content' : 'Arrivals',
+        'link-content' : 'Purchase confirmations',
         'link' :`${WEBSITE_URI}/StockManager/Stock/StockArrival`
     },
     {
