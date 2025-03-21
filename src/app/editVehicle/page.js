@@ -131,7 +131,7 @@ export default function EditVehicleForm() {
           {/* Back Button */}
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/editHome")}
             className="w-full bg-gray-400 text-white py-2 rounded-lg mt-2 hover:bg-gray-500 transition"
           >
             Back

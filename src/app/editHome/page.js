@@ -1,14 +1,14 @@
-"use client"; // Ensure Next.js App Router compatibility
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function SearchVehicleForm() {
+export default function EditVehicleForm() {
   const [formData, setFormData] = useState({
     vehicleNumber: "",
   });
 
-  const router = useRouter(); // Get router instance
+  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,22 +17,21 @@ export default function SearchVehicleForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple validation
     if (!formData.vehicleNumber) {
-      alert("Please fill in the Vehicle Number.");
+      alert("Please fill in all required fields.");
       return;
     }
 
     console.log("Form Data:", formData);
 
-    // Navigate to the search page after submission
-    router.push(`/searchVehicle?vehicleNumber=${formData.vehicleNumber}`);
+    // Redirect to edit details page after entering vehicle number
+    router.push("/editVehicle");
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100">
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-[400px]">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-700">Search Vehicle</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-700">Edit Vehicle</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           
           {/* Vehicle Number */}
@@ -48,12 +47,12 @@ export default function SearchVehicleForm() {
             />
           </div>
 
-          {/* Search Button */}
+          {/* Edit Button */}
           <button
             type="submit"
             className="w-full bg-purple-500 text-white py-2 rounded-xl hover:bg-purple-600 transition transform hover:scale-105 cursor-pointer"
           >
-            Search
+            Edit
           </button>
 
           {/* Back Button */}
