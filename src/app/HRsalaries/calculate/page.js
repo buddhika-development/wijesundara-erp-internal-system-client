@@ -18,10 +18,10 @@ export default function ViewSalary() {
   const fetchEmployees = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/employee");
-      setEmployees(response.data);
+      setEmployees(response.data || []);
     } catch (error) {
-      console.error("error fetching employees:", error);
-      setError("failed to load employees");
+      console.error("Error fetching employees:", error);
+      setError("Failed to load employees.");
     }
   };
 
@@ -36,10 +36,10 @@ export default function ViewSalary() {
         `http://localhost:5000/api/salary/${employeeId}/${selectedYear}/${selectedMonth}`
       );
       console.log("Salary data received:", response.data);
-      setSalaryData(response.data);
+      setSalaryData(response.data || {});
     } catch (error) {
       console.error("Error fetching salary:", error.response?.data || error.message);
-      setError(error.response?.data?.message || "Failed to fetch salary deta");
+      setError(error.response?.data?.message || "Failed to fetch salary details.");
     } finally {
       setLoading(false);
     }
@@ -60,144 +60,208 @@ export default function ViewSalary() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F8FF] p-5">
-      <h1 className="text-2xl font-bold mb-4 text-black">View Employee Salary</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6">View Employee Salary</h1>
 
-      {/* select year and month */}
-      <div className="mb-4 flex gap-4 bg-gray-300 p-4 rounded-lg">
-        <div>
-          <label className="block text-sm font-medium text-black" htmlFor="year">
-            Year
-          </label>
-          <input
-            type="number"
-            id="year"
-            value={year}
-            onChange={(e) => {
-              setYear(e.target.value);
-              handleDateChange();
-            }}
-            min="2000"
-            max={new Date().getFullYear()}
-            className="mt-1 p-2 border border-gray-500 rounded w-24 bg-white text-black"
-          />
+        {/* Select Year and Month */}
+        <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+          <div className="flex gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="year">
+                Year
+              </label>
+              <input
+                type="number"
+                id="year"
+                value={year}
+                onChange={(e) => {
+                  setYear(e.target.value);
+                  handleDateChange();
+                }}
+                min="2000"
+                max={new Date().getFullYear()}
+                className="input-field w-24"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="month">
+                Month
+              </label>
+              <select
+                id="month"
+                value={month}
+                onChange={(e) => {
+                  setMonth(e.target.value);
+                  handleDateChange();
+                }}
+                className="input-field w-32"
+              >
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={(i + 1).toString().padStart(2, "0")}>
+                    {new Date(0, i).toLocaleString("default", { month: "long" })}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-black" htmlFor="month">
-            Month
-          </label>
-          <select
-            id="month"
-            value={month}
-            onChange={(e) => {
-              setMonth(e.target.value);
-              handleDateChange();
-            }}
-            className="mt-1 p-2 border border-gray-500 rounded bg-white text-black"
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <option key={i + 1} value={(i + 1).toString().padStart(2, "0")}>
-                {new Date(0, i).toLocaleString("default", { month: "long" })}
-              </option>
-            ))}
-          </select>
+
+        {/* Employee List */}
+        <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Employee List</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-700">
+                  <th className="p-3 text-left font-medium">ID</th>
+                  <th className="p-3 text-left font-medium">Name</th>
+                  <th className="p-3 text-left font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map((emp) => (
+                  <tr key={emp._id} className="border-t border-gray-100 hover:bg-gray-50">
+                    <td className="p-3 text-gray-700">{emp.employee_id || "N/A"}</td>
+                    <td className="p-3 text-gray-700">{emp.employee_name || "N/A"}</td>
+                    <td className="p-3">
+                      <button
+                        onClick={() => handleEmployeeSelect(emp._id)}
+                        className={`btn-primary px-4 py-2 text-sm ${
+                          selectedEmployee?._id === emp._id ? "bg-blue-600" : ""
+                        }`}
+                      >
+                        {selectedEmployee?._id === emp._id ? "Selected" : "View"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {employees.length === 0 && !error && (
+            <p className="mt-4 text-gray-500">No employees found.</p>
+          )}
+          {error && !loading && <p className="mt-4 text-red-500 text-sm">{error}</p>}
         </div>
+
+        {/* Salary Details */}
+        {loading && <p className="text-gray-500">Loading salary details...</p>}
+        {salaryData && !loading && (
+          <div className="bg-white p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Salary Details for {selectedEmployee?.employee_name || "Unknown"} ({salaryData.month || "N/A"})
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <tbody>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Job Role</td>
+                    <td className="p-3 text-gray-700">{salaryData.job_role || "N/A"}</td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Base Salary</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.baseSalary || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Total Days Attended</td>
+                    <td className="p-3 text-gray-700">{salaryData.totalDaysAttended || "N/A"}</td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Extra Days</td>
+                    <td className="p-3 text-gray-700">{salaryData.extraDays || "N/A"}</td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Attendance Bonus</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.attendanceBonus || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Monthly Bonus</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.monthlyBonus || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Employee EPF</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.employeeEPF || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Employer EPF</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.employerEPF || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Employer ETF</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.employerETF || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Net Salary</td>
+                    <td className="p-3 text-gray-700 font-bold">
+                      {(salaryData.netSalary || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr className="border-t border-gray-100">
+                    <td className="p-3 text-gray-700 font-medium">Total Employer Cost</td>
+                    <td className="p-3 text-gray-700">
+                      {(salaryData.totalEmployerCost || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Employee List */}
-      <div className="bg-gray-300 p-4 rounded-lg mb-6">
-        <table className="w-full border-collapse border border-gray-500">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-500 p-2 text-black">ID</th>
-              <th className="border border-gray-500 p-2 text-black">Name</th>
-              <th className="border border-gray-500 p-2 text-black">Select</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((emp) => (
-              <tr key={emp._id} className="border border-gray-500 bg-white">
-                <td className="border border-gray-500 p-2 text-black">{emp.employee_id}</td>
-                <td className="border border-gray-500 p-2 text-black">{emp.employee_name}</td>
-                <td className="border border-gray-500 p-2">
-                  <button
-                    onClick={() => handleEmployeeSelect(emp._id)}
-                    className={`py-1 px-3 rounded ${
-                      selectedEmployee?._id === emp._id
-                        ? "bg-red-600 text-white"
-                        : "bg-red-500 text-white hover:bg-red-600"
-                    }`}
-                  >
-                    {selectedEmployee?._id === emp._id ? "Selected" : "View"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Salary Details */}
-      {loading && <p className="text-black">Loading salary details...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {salaryData && (
-        <div className="border border-gray-500 p-4 rounded-lg bg-gray-300">
-          <h2 className="text-xl font-semibold mb-2 text-black">
-            Salary Details for {selectedEmployee?.employee_name} ({salaryData.month})
-          </h2>
-          <table className="w-full border-collapse border border-gray-500">
-            <tbody>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Job Role</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.job_role}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Base Salary</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.baseSalary.toLocaleString()}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Total Days Attended</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.totalDaysAttended}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Extra Days</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.extraDays}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Attendance Bonus</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.attendanceBonus.toLocaleString()}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Monthly Bonus</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.monthlyBonus.toLocaleString()}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Employee EPF</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.employeeEPF.toLocaleString()}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Employer EPF</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.employerEPF.toLocaleString()}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Employer ETF</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.employerETF.toLocaleString()}</td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Net Salary</td>
-                <td className="border border-gray-500 p-2 font-bold text-black">
-                  {salaryData.netSalary.toLocaleString()}
-                </td>
-              </tr>
-              <tr className="bg-white">
-                <td className="border border-gray-500 p-2 font-medium text-black">Total Employer Cost</td>
-                <td className="border border-gray-500 p-2 text-black">{salaryData.totalEmployerCost.toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
-
+      {/* Styling */}
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+        .min-h-screen {
+          font-family: 'Poppins', sans-serif;
+        }
+        .input-field {
+          display: block;
+          width: 100%;
+          background-color: #f9fafb;
+          color: #1f2937;
+          border: 1px solid #d1d5db;
+          padding: 10px;
+          border-radius: 8px;
+          font-size: 14px;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-field:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .btn-primary {
+          display: inline-block;
+          background-color: #3b82f6; /* Blue */
+          color: white;
+          padding: 11px 20px;
+          border-radius: 8px;
+          text-align: center;
+          cursor: pointer;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover:not(:disabled) {
+          background-color: #2563eb;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        .shadow-md {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+      `}</style>
     </div>
   );
 }

@@ -19,11 +19,15 @@ export default function CustomizeSalaryFormula() {
 
   const fetchJobRoles = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("http://localhost:5000/api/jobrole");
-      setJobRoles(response.data);
+      setJobRoles(response.data || []);
+      setError(null);
     } catch (error) {
       console.error("Error fetching job roles:", error);
       setError("Failed to load job roles.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,131 +81,201 @@ export default function CustomizeSalaryFormula() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F8FF] p-5">
-      <h1 className="text-2xl font-bold mb-4 text-black">Customize Salary Formula</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6">Customize Salary Formula</h1>
 
-      {/* Job Roles Table */}
-      <div className="bg-gray-300 p-4 rounded-lg mb-6">
-        <table className="w-full border-collapse border border-gray-500">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-500 p-2 text-black">ID</th>
-              <th className="border border-gray-500 p-2 text-black">Job Role</th>
-              <th className="border border-gray-500 p-2 text-black">Base Salary</th>
-              <th className="border border-gray-500 p-2 text-black">Monthly Bonus</th>
-              <th className="border border-gray-500 p-2 text-black">Attendance Bonus/Day</th>
-              <th className="border border-gray-500 p-2 text-black">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jobRoles.map((jr) => (
-              <tr key={jr._id} className="border border-gray-500 bg-white">
-                <td className="border border-gray-500 p-2 text-black">{jr.job_role_id}</td>
-                <td className="border border-gray-500 p-2 text-black">{jr.job_role_name}</td>
-                <td className="border border-gray-500 p-2 text-black">{jr.job_role_salary.toLocaleString()}</td>
-                <td className="border border-gray-500 p-2 text-black">{jr.monthly_bonus.toLocaleString()}</td>
-                <td className="border border-gray-500 p-2 text-black">{jr.attendance_bonus_per_extra_day.toLocaleString()}</td>
-                <td className="border border-gray-500 p-2">
-                  <button
-                    onClick={() => handleEditClick(jr)}
-                    className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
+        {/* Job Roles Table */}
+        <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Job Roles</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-700">
+                  <th className="p-3 text-left font-medium">ID</th>
+                  <th className="p-3 text-left font-medium">Job Role</th>
+                  <th className="p-3 text-left font-medium">Base Salary</th>
+                  <th className="p-3 text-left font-medium">Monthly Bonus</th>
+                  <th className="p-3 text-left font-medium">Attendance Bonus/Day</th>
+                  <th className="p-3 text-left font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jobRoles.map((jr) => (
+                  <tr key={jr._id} className="border-t border-gray-100 hover:bg-gray-50">
+                    <td className="p-3 text-gray-700">{jr.job_role_id || "N/A"}</td>
+                    <td className="p-3 text-gray-700">{jr.job_role_name || "N/A"}</td>
+                    <td className="p-3 text-gray-700">
+                      {(jr.job_role_salary || 0).toLocaleString()}
+                    </td>
+                    <td className="p-3 text-gray-700">
+                      {(jr.monthly_bonus || 0).toLocaleString()}
+                    </td>
+                    <td className="p-3 text-gray-700">
+                      {(jr.attendance_bonus_per_extra_day || 0).toLocaleString()}
+                    </td>
+                    <td className="p-3">
+                      <button
+                        onClick={() => handleEditClick(jr)}
+                        className="btn-primary px-4 py-2 text-sm"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {loading && <p className="mt-4 text-gray-500">Loading job roles...</p>}
+          {!loading && jobRoles.length === 0 && !error && (
+            <p className="mt-4 text-gray-500">No job roles found.</p>
+          )}
+          {!loading && error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
+        </div>
+
+        {/* Edit Form */}
+        {editJobRole && (
+          <div className="bg-white p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Edit Salary Formula for {editJobRole.job_role_name || "Unknown"}
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                    htmlFor="job_role_salary"
                   >
-                    Edit
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    Base Salary
+                  </label>
+                  <input
+                    type="number"
+                    id="job_role_salary"
+                    name="job_role_salary"
+                    value={formData.job_role_salary}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                    htmlFor="monthly_bonus"
+                  >
+                    Monthly Bonus
+                  </label>
+                  <input
+                    type="number"
+                    id="monthly_bonus"
+                    name="monthly_bonus"
+                    value={formData.monthly_bonus}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    className="input-field"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                    htmlFor="attendance_bonus_per_extra_day"
+                  >
+                    Attendance Bonus Per Extra Day
+                  </label>
+                  <input
+                    type="number"
+                    id="attendance_bonus_per_extra_day"
+                    name="attendance_bonus_per_extra_day"
+                    value={formData.attendance_bonus_per_extra_day}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    className="input-field"
+                    required
+                  />
+                </div>
+              </div>
+              {error && <p className="text-red-500 mt-4 text-sm">{error}</p>}
+              <div className="mt-6 flex justify-end gap-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`btn-primary w-48 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  {loading ? "Saving..." : "Save Changes"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditJobRole(null)}
+                  className="btn-accent w-48"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
 
-      {/* Edit Form */}
-      {editJobRole && (
-        <div className="border border-gray-500 p-4 rounded-lg bg-gray-300 mb-4">
-          <h2 className="text-xl font-semibold mb-2 text-black">
-            Edit Salary Formula for {editJobRole.job_role_name}
-          </h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-black" htmlFor="job_role_salary">
-                Base Salary
-              </label>
-              <input
-                type="number"
-                id="job_role_salary"
-                name="job_role_salary"
-                value={formData.job_role_salary}
-                onChange={handleInputChange}
-                min="0"
-                step="1"
-                className="mt-1 p-2 border border-gray-500 rounded w-full bg-white text-black"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-black" htmlFor="monthly_bonus">
-                Monthly Bonus
-              </label>
-              <input
-                type="number"
-                id="monthly_bonus"
-                name="monthly_bonus"
-                value={formData.monthly_bonus}
-                onChange={handleInputChange}
-                min="0"
-                step="1"
-                className="mt-1 p-2 border border-gray-500 rounded w-full bg-white text-black"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                className="block text-sm font-medium text-black"
-                htmlFor="attendance_bonus_per_extra_day"
-              >
-                Attendance Bonus Per Extra Day
-              </label>
-              <input
-                type="number"
-                id="attendance_bonus_per_extra_day"
-                name="attendance_bonus_per_extra_day"
-                value={formData.attendance_bonus_per_extra_day}
-                onChange={handleInputChange}
-                min="0"
-                step="1"
-                className="mt-1 p-2 border border-gray-500 rounded w-full bg-white text-black"
-                required
-              />
-            </div>
-            {error && <p className="text-red-500 mb-2">{error}</p>}
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`bg-red-500 text-white py-2 px-4 rounded ${
-                  loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
-                }`}
-              >
-                {loading ? "Saving..." : "Save Changes"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditJobRole(null)}
-                className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* <style jsx>{`
+      {/* Styling */}
+      <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
         .min-h-screen {
           font-family: 'Poppins', sans-serif;
         }
-      `}</style> */}
+        .input-field {
+          display: block;
+          width: 100%;
+          background-color: #f9fafb;
+          color: #1f2937;
+          border: 1px solid #d1d5db;
+          padding: 10px;
+          border-radius: 8px;
+          font-size: 14px;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-field:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .btn-primary {
+          display: inline-block;
+          background-color: #3b82f6; /* Blue */
+          color: white;
+          padding: 11px 20px;
+          border-radius: 8px;
+          text-align: center;
+          cursor: pointer;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover:not(:disabled) {
+          background-color: #2563eb;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        .btn-accent {
+          display: inline-block;
+          background-color: #64748b; /* Slate */
+          color: white;
+          padding: 11px 20px;
+          border-radius: 8px;
+          text-align: center;
+          cursor: pointer;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-accent:hover {
+          background-color: #475569;
+          box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3);
+        }
+        .shadow-md {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+      `}</style>
     </div>
   );
 }

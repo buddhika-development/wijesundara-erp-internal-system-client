@@ -1,104 +1,127 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
 
-const Calendar = dynamic(() => import('react-calendar'), { ssr: false });
+const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
 export default function Home() {
   const router = useRouter();
-
   const [date, setDate] = useState(null);
-  
-    const [reminders, setReminders] = useState({});
-  
-    useEffect(() => {
-      setDate(new Date());
-    }, []);
-  
-    const handleDateClick = (selectedDate) => {
-      const reminder = prompt("Enter a reminder:");
-      if (reminder) {
-        setReminders((prev) => ({
-          ...prev,
-          [selectedDate.toDateString()]: reminder,
-        }));
-      }
-    };
+  const [reminders, setReminders] = useState({});
 
+  useEffect(() => {
+    setDate(new Date());
+  }, []);
+
+  const handleDateClick = (selectedDate) => {
+    const reminder = prompt("Enter a reminder:");
+    if (reminder) {
+      setReminders((prev) => ({
+        ...prev,
+        [selectedDate.toDateString()]: reminder,
+      }));
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white p-5">
-      <div className="grid grid-cols-12 gap-4 mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* First Row - Sections */}
+        <div className="grid grid-cols-12 gap-6 mb-8">
+          {/* Employee Section */}
+          <div className="col-span-3 bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-5">Employee</h2>
+            <button className="btn-primary" onClick={() => router.push("/HRemployee/add")}>
+              Add
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRemployee/edit")}>
+              Edit
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRemployee/list")}>
+              Current List
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRemployee/terminate")}>
+              Terminate
+            </button>
+          </div>
 
-        {/* Employee Section */}
-        <div className="bg-gray-300 p-4 rounded-lg col-span-3">
-          <h2 className="font-bold mb-2 text-black">Employee</h2>
-          <button className="btn-light" onClick={() => router.push('/HRemployee/add')}>Add</button>
-          <button className="btn-light" onClick={() => router.push('/HRemployee/edit')}>Edit</button>
-          <button className="btn-light" onClick={() => router.push('/HRemployee/list')}>Current list</button>
-          <button className="btn-light" onClick={() => router.push('/HRemployee/terminate')}>Terminate</button>
+          {/* Attendance Section */}
+          <div className="col-span-3 bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-5">Attendance</h2>
+            <button className="btn-primary" onClick={() => router.push("/HRattendance/daily")}>
+              Daily Attendance
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRattendance/history")}>
+              History
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRattendance/add")}>
+              Add Manually
+            </button>
+          </div>
+
+          {/* Salary Management Section */}
+          <div className="col-span-3 bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-5">Salary Management</h2>
+            <button className="btn-primary" onClick={() => router.push("/HRsalaries/calculate")}>
+              Calculate Salary
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRsalaries/approval")}>
+              Get Approval
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRsalaries/customize")}>
+              Customize Formula
+            </button>
+            <button className="btn-primary" onClick={() => router.push("/HRsalaries/payslip")}>
+              Download Payslip
+            </button>
+          </div>
+
+          {/* Analytics Section */}
+          <div className="col-span-3 bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 flex items-center justify-center">
+            <button className="btn-accent w-full" onClick={() => router.push("/HRanalytics")}>
+              Analytics
+            </button>
+          </div>
         </div>
 
-        {/* Attendance Section */}
-        <div className="bg-gray-300 p-4 rounded-lg col-span-3">
-          <h2 className="font-bold mb-2 text-black">Attendance</h2>
-          <button className="btn-light" onClick={() => router.push('/HRattendance/daily')}>Daily Attendance</button>
-          <button className="btn-light" onClick={() => router.push('/HRattendance/history')}>History</button>
-          <button className="btn-light" onClick={() => router.push('/HRattendance/add')}>Add Manually</button>
-        </div>
+        {/* Second Row - Notifications and Calendar */}
+        <div className="grid grid-cols-12 gap-6">
+          {/* Notifications */}
+          <div className="col-span-6 bg-white p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-5">Notifications</h2>
+            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-500">
+              <span>No notifications yet</span>
+            </div>
+          </div>
 
-        {/* salarie Section */}
-        <div className="bg-gray-300 p-4 rounded-lg col-span-3">
-          <h2 className="font-bold mb-2 text-black">Salary Management</h2>
-          <button className="btn-light" onClick={() => router.push('/HRsalaries/calculate')}>Calculate Salary</button>
-          <button className="btn-light" onClick={() => router.push('/HRsalaries/approval')}>Get Approval</button>
-          <button className="btn-light" onClick={() => router.push('/HRsalaries/customize')}>Customize Salary Formula</button>
-          <button className="btn-light" onClick={() => router.push('/HRsalaries/payslip')}>Download Payslip</button>
-        </div>
+          {/* Calendar and Reminders */}
+          <div className="col-span-6 bg-white p-6 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-5">Reminder / Calendar</h2>
+            <div className="flex gap-6">
+              {/* Calendar */}
+              {date && (
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                  <Calendar
+                    onChange={setDate}
+                    value={date}
+                    onClickDay={handleDateClick}
+                    className="rounded-lg border-none text-gray-900"
+                    locale="en-GB"
+                  />
+                </div>
+              )}
 
-        
-        {/* Analytics Section */}
-                <div className="bg-gray-300 p-4 rounded-lg col-span-3 flex items-center justify-center">
-          <button className="btn-dark text-black w-full" onClick={() => router.push('/HRanalytics')}>Analytics</button>
-        </div>
-      </div>
-
-      
-      {/* Second row */}
-      <div className="grid grid-cols-12 gap-4">
-        {/* Notifications */}
-        <div className="bg-gray-300 p-4 rounded-lg col-span-6">
-          <h2 className="font-bold mb-2 text-black">Notifications</h2>
-          <div className="h-48 bg-gray-400 rounded"></div>
-        </div>
-
-        {/* Calendar and Reminders */}
-        <div className="bg-gray-300 p-4 rounded-lg col-span-6">
-          <h2 className="font-bold mb-2 text-black">Reminder / Calendar</h2>
-          <div className="mt-4 bg-gray-400 p-4 rounded flex gap-4">
-             {/*Calendar */}
-            {date && (
-              <div className="bg-white p-3 rounded shadow-md text-black">
-                <Calendar
-                  onChange={setDate}
-                  value={date}
-                  onClickDay={handleDateClick}
-                  className="rounded"
-                  locale="en-GB" 
-                />
+              {/* Reminders */}
+              <div className="flex-1 bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-100">
+                <h3 className="text-lg font-medium text-gray-800 mb-3">Reminders</h3>
+                {date && reminders[date.toDateString()] ? (
+                  <p className="text-gray-700">{reminders[date.toDateString()]}</p>
+                ) : (
+                  <p className="text-gray-500 italic">No reminders for this date</p>
+                )}
               </div>
-            )}
-
-            {/* Reminders */}
-            <div className="flex-1 p-3 bg-white rounded shadow-md text-black">
-              <h3 className="text-black font-bold mb-2">Reminders:</h3>
-              {date && reminders[date.toDateString()] ? (
-                   <p>{reminders[date.toDateString()]}</p>
-               ) : (
-                 <p>No reminders</p>
-               )}
             </div>
           </div>
         </div>
@@ -108,27 +131,54 @@ export default function Home() {
       <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
         .min-h-screen {
-          background-color: #F6F8FF;
           font-family: 'Poppins', sans-serif;
         }
-        .btn-light {
-
-
+        .btn-primary {
           display: block;
           width: 100%;
-          background-color: white;
-          color: black;
-          border: 1px solid black;
-          padding: 10px;
-          margin: 5px 0;
-          border-radius: 5px;
+          background-color: #3b82f6; /* Blue */
+          color: white;
+          padding: 11px;
+          margin: 8px 0;
+          border-radius: 8px;
           text-align: center;
           cursor: pointer;
-          font-family: 'Poppins', sans-serif;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .btn-light:hover {
-          background-color: #e0e0e0;
-          border: 1px solid black;
+        .btn-primary:hover {
+          background-color: #2563eb;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        .btn-accent {
+          display: block;
+          width: 100%;
+          background-color: #64748b; /* Slate */
+          color: white;
+          padding: 12px;
+          margin: 8px 0;
+          border-radius: 8px;
+          text-align: center;
+          cursor: pointer;
+          transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-accent:hover {
+          background-color: #475569;
+          box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3);
+        }
+        .shadow-md {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .shadow-sm {
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        .shadow-lg {
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        .hover\:shadow-lg:hover {
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        .border-gray-100 {
+          border-color: #f3f4f6;
         }
       `}</style>
     </div>

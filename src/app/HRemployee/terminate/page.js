@@ -5,7 +5,7 @@ import axios from "axios";
 export default function TerminateEmployee() {
   const [activeEmployees, setActiveEmployees] = useState([]);
   const [inactiveEmployees, setInactiveEmployees] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -14,13 +14,17 @@ export default function TerminateEmployee() {
 
   const fetchEmployees = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await axios.get("http://localhost:5000/api/employee");
-      const allEmployees = response.data;
-      setActiveEmployees(allEmployees.filter(emp => emp.employee_status === "active"));
-      setInactiveEmployees(allEmployees.filter(emp => emp.employee_status === "Inactive"));
+      const allEmployees = response.data || [];
+      setActiveEmployees(allEmployees.filter((emp) => emp.employee_status === "active"));
+      setInactiveEmployees(allEmployees.filter((emp) => emp.employee_status === "inactive")); // Fixed case sensitivity
     } catch (error) {
       console.error("Error fetching employees:", error);
       setError("Failed to load employees.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,13 +48,16 @@ export default function TerminateEmployee() {
 
     try {
       const response = await axios.put(`http://localhost:5000/api/employee/${employeeId}`, {
-        employee_status: "Inactive",
+        employee_status: "inactive", // Consistent lowercase as per common practice
       });
       console.log("Employee terminated:", response.data);
 
-      const terminatedEmployee = activeEmployees.find(emp => emp._id === employeeId);
+      const terminatedEmployee = activeEmployees.find((emp) => emp._id === employeeId);
       setActiveEmployees((prev) => prev.filter((emp) => emp._id !== employeeId));
-      setInactiveEmployees((prev) => [...prev, { ...terminatedEmployee, employee_status: "Inactive" }]);
+      setInactiveEmployees((prev) => [
+        ...prev,
+        { ...terminatedEmployee, employee_status: "inactive" },
+      ]);
     } catch (error) {
       console.error("Error terminating employee:", error);
       setError(error.response?.data?.error || "Failed to terminate employee.");
@@ -60,99 +67,129 @@ export default function TerminateEmployee() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F8FF] p-5">
-      <h1 className="text-2xl font-bold mb-4 text-black">Terminate Employee</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6">Terminate Employee</h1>
 
-      {/* Active Employees Section */}
-      <div className="bg-gray-300 p-4 rounded-lg mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-black">Active Employees</h2>
-        <table className="w-full border-collapse border border-gray-500">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-500 p-2 text-black">ID</th>
-              <th className="border border-gray-500 p-2 text-black">Name</th>
-              <th className="border border-gray-500 p-2 text-black">DOB</th>
-              <th className="border border-gray-500 p-2 text-black">Active Period</th>
-              <th className="border border-gray-500 p-2 text-black">Days Active</th>
-              <th className="border border-gray-500 p-2 text-black">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activeEmployees.map((emp) => {
-              const { period, days } = calculateActivePeriod(emp.employee_dob);
-              return (
-                <tr key={emp._id} className="border border-gray-500 bg-white">
-                  <td className="border border-gray-500 p-2 text-black">{emp.employee_id}</td>
-                  <td className="border border-gray-500 p-2 text-black">{emp.employee_name}</td>
-                  <td className="border border-gray-500 p-2 text-black">
-                    {new Date(emp.employee_dob).toLocaleDateString()}
-                  </td>
-                  <td className="border border-gray-500 p-2 text-black">{period}</td>
-                  <td className="border border-gray-500 p-2 text-black">{days}</td>
-                  <td className="border border-gray-500 p-2">
-                    <button
-                      onClick={() => handleTerminate(emp._id)}
-                      disabled={loading}
-                      className={`bg-red-500 text-white py-1 px-3 rounded ${
-                        loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
-                      }`}
-                    >
-                      {loading ? "Terminating..." : "Terminate"}
-                    </button>
-                  </td>
+        {/* Active Employees Section */}
+        <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Active Employees</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-700">
+                  <th className="p-3 text-left font-medium">ID</th>
+                  <th className="p-3 text-left font-medium">Name</th>
+                  <th className="p-3 text-left font-medium">DOB</th>
+                  <th className="p-3 text-left font-medium">Active Period</th>
+                  <th className="p-3 text-left font-medium">Days Active</th>
+                  <th className="p-3 text-left font-medium">Action</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {activeEmployees.length === 0 && !loading && !error && (
-          <p className="mt-2 text-black">No active employees found.</p>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {activeEmployees.map((emp) => {
+                  const { period, days } = calculateActivePeriod(emp.employee_dob || new Date());
+                  return (
+                    <tr key={emp._id} className="border-t border-gray-100 hover:bg-gray-50">
+                      <td className="p-3 text-gray-700">{emp.employee_id || "N/A"}</td>
+                      <td className="p-3 text-gray-700">{emp.employee_name || "N/A"}</td>
+                      <td className="p-3 text-gray-700">
+                        {emp.employee_dob
+                          ? new Date(emp.employee_dob).toLocaleDateString()
+                          : "N/A"}
+                      </td>
+                      <td className="p-3 text-gray-700">{period}</td>
+                      <td className="p-3 text-gray-700">{days}</td>
+                      <td className="p-3">
+                        <button
+                          onClick={() => handleTerminate(emp._id)}
+                          disabled={loading}
+                          className={`btn-terminate px-4 py-2 text-sm ${
+                            loading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                        >
+                          {loading ? "Terminating..." : "Terminate"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {loading && <p className="mt-4 text-gray-500">Loading active employees...</p>}
+          {!loading && activeEmployees.length === 0 && !error && (
+            <p className="mt-4 text-gray-500">No active employees found.</p>
+          )}
+          {!loading && error && <p className="mt-4 text-red-500">{error}</p>}
+        </div>
 
-      {/* Inactive Employees Section */}
-      <div className="bg-gray-300 p-4 rounded-lg mb-4">
-        <h2 className="text-xl font-semibold mb-2 text-black">Inactive Employees</h2>
-        <table className="w-full border-collapse border border-gray-500">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-500 p-2 text-black">ID</th>
-              <th className="border border-gray-500 p-2 text-black">Name</th>
-              <th className="border border-gray-500 p-2 text-black">DOB</th>
-              <th className="border border-gray-500 p-2 text-black">Active Period</th>
-              <th className="border border-gray-500 p-2 text-black">Days Active</th>
-            </tr>
-          </thead>
-          <tbody>
-            {inactiveEmployees.map((emp) => {
-              const { period, days } = calculateActivePeriod(emp.employee_dob);
-              return (
-                <tr key={emp._id} className="border border-gray-500 bg-white">
-                  <td className="border border-gray-500 p-2 text-black">{emp.employee_id}</td>
-                  <td className="border border-gray-500 p-2 text-black">{emp.employee_name}</td>
-                  <td className="border border-gray-500 p-2 text-black">
-                    {new Date(emp.employee_dob).toLocaleDateString()}
-                  </td>
-                  <td className="border border-gray-500 p-2 text-black">{period}</td>
-                  <td className="border border-gray-500 p-2 text-black">{days}</td>
+        {/* Inactive Employees Section */}
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Inactive Employees</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-700">
+                  <th className="p-3 text-left font-medium">ID</th>
+                  <th className="p-3 text-left font-medium">Name</th>
+                  <th className="p-3 text-left font-medium">DOB</th>
+                  <th className="p-3 text-left font-medium">Active Period</th>
+                  <th className="p-3 text-left font-medium">Days Active</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {inactiveEmployees.length === 0 && !loading && !error && (
-          <p className="mt-2 text-black">No inactive employees found.</p>
-        )}
+              </thead>
+              <tbody>
+                {inactiveEmployees.map((emp) => {
+                  const { period, days } = calculateActivePeriod(emp.employee_dob || new Date());
+                  return (
+                    <tr key={emp._id} className="border-t border-gray-100 hover:bg-gray-50">
+                      <td className="p-3 text-gray-700">{emp.employee_id || "N/A"}</td>
+                      <td className="p-3 text-gray-700">{emp.employee_name || "N/A"}</td>
+                      <td className="p-3 text-gray-700">
+                        {emp.employee_dob
+                          ? new Date(emp.employee_dob).toLocaleDateString()
+                          : "N/A"}
+                      </td>
+                      <td className="p-3 text-gray-700">{period}</td>
+                      <td className="p-3 text-gray-700">{days}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {loading && <p className="mt-4 text-gray-500">Loading inactive employees...</p>}
+          {!loading && inactiveEmployees.length === 0 && !error && (
+            <p className="mt-4 text-gray-500">No inactive employees found.</p>
+          )}
+          {!loading && error && <p className="mt-4 text-red-500">{error}</p>}
+        </div>
+
+        {/* Styling */}
+        <style jsx>{`
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+          .min-h-screen {
+            font-family: 'Poppins', sans-serif;
+          }
+          .btn-terminate {
+            display: inline-block;
+            background-color: #ef4444; /* Red */
+            color: white;
+            padding: 11px 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+          }
+          .btn-terminate:hover:not(:disabled) {
+            background-color: #dc2626;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+          }
+          .shadow-md {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          }
+        `}</style>
       </div>
-
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-
-      <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
-        .min-h-screen {
-          font-family: 'Poppins', sans-serif;
-        }
-      `}</style>
     </div>
   );
 }
