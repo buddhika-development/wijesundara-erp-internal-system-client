@@ -18,7 +18,7 @@ export default function VehicleManagementPage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-10 bg-gradient-to-br from-gray-100 to-gray-300">
-      <h1 className="text-4xl font-bold mb-10 text-gray-800">🚗 Vehicle Management</h1>
+      <h1 className="text-4xl font-bold mb-10 text-gray-800">Vehicle Management</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl">
         {buttons.map((button) => (
