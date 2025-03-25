@@ -24,17 +24,17 @@ const FinanceDashboard = () => {
   
 
   const newdata = {
-    sec_id: "Tra123",
+    sec_id: "ST123",
   };
 
   const newdata1 = {
     status: "approve",
-    sec_id: "Tra123",
+    sec_id: "ST123",
   };
 
   const newdata2 = { 
     status: "decline",
-    sec_id: "Tra123",
+    sec_id: "ST123",
   }
 
   const getRequests = async (newdata) => {
@@ -184,7 +184,7 @@ const FinanceDashboard = () => {
       console.log("methana shape");
       await axios.post(`http://localhost:8080/api/action/${row._id}`, {
         status: action,
-        sec_id: "Tra123",
+        sec_id: "ST123",
         amount: row.amount,
         description: description,
         date: date,
@@ -210,7 +210,7 @@ const FinanceDashboard = () => {
   const openApproveModal = (row) => {
     setSelectedRow(row);
     setApproveAmount(row.amount.toString()); 
-    setselectedbank(""); 
+    setselectedbank("");
     setApprovemodal(true);
   };
 
@@ -257,7 +257,7 @@ const FinanceDashboard = () => {
     <div className="p-4">
       <div className="flex-1 flex flex-col gap-4">
         <div className="h-16 bg-gray-500 rounded-lg flex items-center p-4 text-white text-lg">
-          Transport Dashboard
+          Expenses Dashboard
         </div>
 
         <div className="h-16 bg-gray-600 rounded-lg flex items-center p-4 text-white text-lg gap-4">
@@ -525,17 +525,18 @@ const FinanceDashboard = () => {
           </div>
         </div>
       )}
+
 {Approvemodal && selectedRow && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
       <h3 className="text-lg font-semibold mb-4 text-black">Approve Transaction</h3>
 
-      
+    
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Amount</label>
         <input
           type="number"
-          value={approveAmount}
+          value={approveAmount} 
           onChange={(e) => setApproveAmount(e.target.value)}
           className={`mt-1 p-2 w-full border rounded-md text-black ${
             approveAmount === "" || parseFloat(approveAmount) <= selectedRow.amount / 2
@@ -555,7 +556,7 @@ const FinanceDashboard = () => {
         )}
       </div>
 
-      
+     
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Select Bank Account</label>
         <select
@@ -577,7 +578,7 @@ const FinanceDashboard = () => {
         )}
       </div>
 
-     
+      {/* Buttons */}
       <div className="flex justify-end space-x-2">
         <button
           onClick={closeApproveModal}
@@ -592,7 +593,7 @@ const FinanceDashboard = () => {
               parseFloat(approveAmount) <= selectedRow.amount / 2 ||
               selectedBankAccount === ""
             ) {
-              return;
+              return; 
             }
             handleApproveSubmit();
           }}
