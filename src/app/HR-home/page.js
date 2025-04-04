@@ -31,6 +31,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white p-5">
       <div className="grid grid-cols-12 gap-4 mb-4">
+
         {/* Employee Section */}
         <div className="bg-gray-300 p-4 rounded-lg col-span-3">
           <h2 className="font-bold mb-2 text-black">Employee</h2>
@@ -48,8 +49,18 @@ export default function Home() {
           <button className="btn-light" onClick={() => router.push('/HRattendance/add')}>Add Manually</button>
         </div>
 
+        {/* salarie Section */}
+        <div className="bg-gray-300 p-4 rounded-lg col-span-3">
+          <h2 className="font-bold mb-2 text-black">Salary Management</h2>
+          <button className="btn-light" onClick={() => router.push('/HRsalaries/calculate')}>Calculate Salary</button>
+          <button className="btn-light" onClick={() => router.push('/HRsalaries/approval')}>Get Approval</button>
+          <button className="btn-light" onClick={() => router.push('/HRsalaries/customize')}>Customize Salary Formula</button>
+          <button className="btn-light" onClick={() => router.push('/HRsalaries/payslip')}>Download Payslip</button>
+        </div>
+
+        
         {/* Analytics Section */}
-        <div className="bg-gray-300 p-4 rounded-lg col-span-6 flex items-center justify-center">
+                <div className="bg-gray-300 p-4 rounded-lg col-span-3 flex items-center justify-center">
           <button className="btn-dark text-black w-full" onClick={() => router.push('/HRanalytics')}>Analytics</button>
         </div>
       </div>
