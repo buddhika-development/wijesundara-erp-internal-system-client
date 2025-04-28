@@ -1,3 +1,8 @@
+// icon import
+import { RxDashboard } from "react-icons/rx";
+import { BiBuildings } from "react-icons/bi";
+import { AiOutlineProduct } from "react-icons/ai";
+
 
 // extract website link
 const WEBSITE_URI = process.env.SITE_URI
@@ -5,15 +10,18 @@ const WEBSITE_URI = process.env.SITE_URI
 export const MainNavigations = [
     {
         'link-content' : 'Dashboard',
-        'link' :`${WEBSITE_URI}/StockManager`
+        'link' :`${WEBSITE_URI}/StockManager`,
+        'icon' : <RxDashboard/>
     },
     {
         'link-content' : 'Stock',
-        'link' : `${WEBSITE_URI}/StockManager/Stock`
+        'link' : `${WEBSITE_URI}/StockManager/Stock`,
+        'icon' : <AiOutlineProduct/>
     },
     {
         'link-content' : 'Infrastructures',
-        'link' : `${WEBSITE_URI}/StockManager/Infrastructures`
+        'link' : `${WEBSITE_URI}/StockManager/Infrastructures`,
+        'icon' : <BiBuildings/>
     },
     // {
     //     'link-content' : 'Team',

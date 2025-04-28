@@ -8,30 +8,7 @@ const PendingTransportationStats = () => {
     const [travels, setTravels] = useState([])
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-
-    useEffect(() => {
-        const fetch_date = async () => {
-            try {
-                const response = await fetch('http://localhost:8080/api/transportaion_task/')
-                if (!response.ok) {
-                    throw new Error("Something went wrong.....")
-                }
-                const travel_details = await response.json()
-                const data = travel_details.filter((item) => item?.transportation_status === 'waiting').slice(1,6)
-                setTravels(data)
-            }
-            catch (err) {
-                console.log(`Something went wrong in data loading.... ${err}`)
-                setError(err)
-            }
-            finally {
-                setLoading(false)
-            }
-        }
-        fetch_date()
-    }, [])
-
-
+    
     return (
         <div className='w-full'>
 
@@ -55,14 +32,7 @@ const PendingTransportationStats = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                    travels.map((travel, index) => (
-                                        <tr key={index}>
-                                            <td>{travel["rice_type"]}</td>
-                                            <td>{`${travel['transportation_stock_amount']} kg`}</td>
-                                        </tr>
-                                    ))
-                                }
+
                             </tbody>
                         </table>
 

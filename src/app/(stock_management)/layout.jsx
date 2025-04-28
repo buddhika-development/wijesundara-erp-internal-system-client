@@ -9,14 +9,14 @@ const StockManagementLayout = ({children}) => {
     return(
         <div className="h-full">
             <Header />  
-            <main>
+            <div>
                 <div className="flex w-full h-full">
                     <Sidebar links={STOCK_MANAGER_NAVIGATIONS} />
-                    <div className="w-[calc(100vw-250px)] h-full mt-[80px] ml-[250px]">
+                    <div className="w-[calc(100vw-400px)] h-full mt-[40px] ml-[150px]">
                         {children}
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     )
 }

@@ -1,22 +1,18 @@
 import SideBarLink from '@/components/ui/SideBarLink'
 import React from 'react'
+import { FiHome } from "react-icons/fi";
 
 const Sidebar = ({links}) => {
   return (
 
     links && (
-      <div className='w-[250px] fixed top-[80px] left-0 h-[calc(100vh-80px)] common-border pt-4 px-4 bg-white'>
+      <div className='w-[220px] fixed top-[60px] left-0 h-[calc(100vh-60px)] common-border pt-4 px-4 bg-white'>
           <div className="stock-manager-functionalities flex flex-col gap-y-2">
             {
               links.map((link, index) => (
-                <SideBarLink key={index} link_content={link['link-content']} link={link['link']} />
+                <SideBarLink key={index} link_content={link['link-content']} link={link['link']} icon={link['icon']}/>
               ))
             }
-              {/* <SideBarLink link_content='Dashboard' link='./' />
-              <SideBarLink link_content='Stocks' link='./StockManager/Stock'/>
-              <SideBarLink link_content='Stores' link='./StockManager/Store' />
-              <SideBarLink link_content='Team' link='./StockManager/Team' />
-              <SideBarLink link_content='Notifications' link='./StockManager/Notification' /> */}
           </div>
       </div>
     )
