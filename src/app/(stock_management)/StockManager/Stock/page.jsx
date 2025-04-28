@@ -31,11 +31,11 @@ const page = () => {
         </div>
       </div>
 
-      {/* pending arrivals details */}
-      <PendingArrivalsDetails />
-
       {/* pending confrimation detials */}
       <PendingConfirmations />
+
+      {/* pending arrivals details */}
+      <PendingArrivalsDetails />
       
     </div>
   )

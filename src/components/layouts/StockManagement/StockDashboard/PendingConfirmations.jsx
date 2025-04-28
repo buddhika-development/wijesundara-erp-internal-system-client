@@ -46,7 +46,7 @@ const PendingConfirmations = () => {
 
         if(userConfirmation) {
 
-            const end_point_url = new URL(`http://localhost:8080/api/transportaion_task/${task_id}`)
+            const end_point_url = new URL(`http://localhost:8080/api/transportaion_task/update_task/${task_id}`)
 
             const response = await fetch(end_point_url, {
                 method : "PATCH"
