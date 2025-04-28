@@ -2,7 +2,7 @@
 
 import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
-import { GiConfirmed } from "react-icons/gi";
+
 
 const PendingArrivalsDetails = () => {
 
@@ -18,7 +18,7 @@ const PendingArrivalsDetails = () => {
                 if (arrivals_response.ok) {
                     const arrival_detilas = await arrivals_response.json()
 
-                    const temp_data = arrival_detilas.slice(1, 6)
+                    const temp_data = arrival_detilas.slice(0, 12)
                     setArrivals(temp_data)
                 }
                 else {

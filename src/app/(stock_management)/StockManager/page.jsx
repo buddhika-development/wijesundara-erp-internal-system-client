@@ -5,6 +5,7 @@ import PendingTransportationStats from '@/components/layouts/StockManagement/Sto
 import React from 'react'
 import PendingArrivalsDetails from '@/components/layouts/StockManagement/StockDashboard/PendingArrivalsDetails'
 import PendingConfirmations from '@/components/layouts/StockManagement/StockDashboard/PendingConfirmations'
+import RecentBidDetails from '@/components/layouts/StockManagement/StockDashboard/RecentBidDetails'
 
 const page = () => {
   return (
@@ -22,14 +23,14 @@ const page = () => {
         {/* available stock details */}
         <AvailableStockDetails />
         {/* pending customer transportion detials */}
-        <PendingTransportationStats />
+        <RecentBidDetails />
       </div>
       
       <PendingConfirmations />
-      
-      <PendingArrivalsDetails />
 
+      <PendingArrivalsDetails />
       
+
     </div>
   )
 }
