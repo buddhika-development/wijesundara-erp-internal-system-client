@@ -1,9 +1,8 @@
 "use client"
 
-import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
-import { GiConfirmed } from "react-icons/gi";
-import { MdErrorOutline } from "react-icons/md";
+import PendingConfrimationTransportation from './PendingConfrimationTransportation';
+import WaitingTransportation from './WaitingTransportation';
 
 const FullPendingConfirmation = () => {
 
@@ -11,88 +10,107 @@ const FullPendingConfirmation = () => {
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    const [pendingConfirmations, setPendingConfirmations] = useState([])
+    const [doneTransportaions, setDoneTransportaions] = useState([])
+    const [witingTransportations, setWitingTransportations] = useState([])
+
     useEffect(() => {
 
         const fetch_date = async () => {
 
-            try{
+            try {
                 const response = await fetch('http://localhost:8080/api/transportaion_task/trasnportation_task_assginment/stats')
 
-                if(!response.ok) {
+                if (!response.ok) {
                     throw new Error("Something went wrong.....")
                 }
 
                 const travel_details = await response.json()
+
                 setTravels(travel_details)
             }
-            catch(err) {
+            catch (err) {
                 console.log(`Something went wrong in data loading.... ${err}`)
                 setError(err)
             }
-            finally{
+            finally {
                 setLoading(false)
             }
         }
 
         fetch_date()
-        
+
     }, [])
 
-    
+
+    useEffect(() => {
+
+        const filter_pending_confrimation_transportations = () => {
+
+            try{
+                const pending_confirmation_transportations = travels.filter((travel) => travel["transportation_status"] == "processing")
+                setPendingConfirmations(pending_confirmation_transportations)
+            }
+            catch(err){
+                console.log(`Something went wrong in pending congirmation transportation filter process.. ${err}`)
+                setError(err)
+            }
+        }
+
+        const filter_waiting_transportations = () => {
+            try{
+                const waiting_transportations = travels.filter((travel) => travel["transportation_status"] = "waiting")
+                setWitingTransportations(waiting_transportations)
+            }
+            catch(err){
+                console.log(`Something went wrong in waiting transporation filtering process... ${err}`)
+            }
+        }
+        
+        const filter_done_transportation = () => {
+            
+            try{
+                const done_transportation = travels.filter((travel) => travel["transportation_status"] == "done")
+                setDoneTransportaions(done_transportation)
+            }
+            catch(err) {
+                console.log(`Something went wrong in already done transporation filtering process... ${err}`)
+                setError(err)
+            }
+        }
+
+        filter_pending_confrimation_transportations()
+        filter_waiting_transportations()
+        filter_done_transportation()
+        
+    }, [travels])
+
+    console.log(pendingConfirmations)
+
     return (
         <div>
             {
                 isLoading ? (
                     <p>Loading....</p>
                 )
-                :error ? (
-                    <p>{error}</p>
-                )
-                : travels.length > 0 ? (
-                    <div className='table-content w-full mt-5'>
-                        <Title title_content='Pending confirmations' />
+                    : error ? (
+                        <p>{error}</p>
+                    )
+                        : travels.length > 0 ? (
 
-                        {/* table of available stock detials */}
-                        <table className='w-full text-left mt-[20px]'>
-                            <thead className='border-0'>
-                                <tr>
-                                    <th>Source</th>
-                                    <th>Destination</th>
-                                    <th>Stock Amount</th>
-                                    <th>Vehicle Number</th>
-                                    <th>Driver Name</th>
-                                    <th>Contact Number</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <div>
+                                {/* pending confirmation details */}
+                                <PendingConfrimationTransportation pendingConfirmations={pendingConfirmations} />
 
-                                {
-                                    travels.map((travel, index) => (
-                                        <tr key={index}>
-                                            <td>{travel?.source?.infrastructure_name || 'undifiend'}</td>
-                                            <td>{travel?.source?.infrastructure_name || 'undifiend'}</td>
-                                            <td>{`${travel["transportation_stock_amount"]} kg`}</td>
-                                            <td>{travel["transportation_vehivle_number"]}</td>
-                                            <td>{travel["transportation_driver_name"]}</td>
-                                            <td>{travel["transportation_contact_number"]}</td>
-                                            <td className='flex gap-x-2 mt-[4px]'>
-                                                <button className='bg-red-100 border-[1px] rounded-xl border-red-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center'><MdErrorOutline className='w-[20px] h-[20px] text-red-800' /></button>
-                                                <button className='bg-green-100 border-[1px] rounded-xl border-green-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center'><GiConfirmed className='h-[20px] w-[20px] text-green-800'/></button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-
-                    </div>
-                )
-                :(
-                    <p>There are no valid data...</p>
-                )
+                                {/* waiting transportaion detials */}
+                                <WaitingTransportation waitingTransportation={witingTransportations} />
+                            </div>
+                        )
+                            : (
+                                <p>There are no valid data...</p>
+                            )
             }
-            
+
         </div>
     )
 }

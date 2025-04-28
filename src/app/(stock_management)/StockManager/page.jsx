@@ -25,9 +25,10 @@ const page = () => {
         <PendingTransportationStats />
       </div>
       
+      <PendingConfirmations />
+      
       <PendingArrivalsDetails />
 
-      <PendingConfirmations />
       
     </div>
   )

@@ -63,7 +63,7 @@ const page = () => {
                       <td>{infra["infrastructure_name"]}</td>
                       <td>{infra["infrastructure_type"]}</td>
                       <td>{infra["contact_number"]}</td>
-                      <td>{`${infra["ingfrastructuire_address_line_one"]} , ${infra["ingfrastructuire_address_line_one"]}, ${infra["ingfrastructuire_address_city"]}`}</td>
+                      <td>{`${infra["infrastructure_address_line_one"]} , ${infra["infrastructure_address_line_two"]}, ${infra["infrastructure_address_city"]}`}</td>
                     </tr>
                   ))
                 }

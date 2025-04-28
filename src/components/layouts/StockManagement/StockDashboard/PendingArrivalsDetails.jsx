@@ -53,7 +53,7 @@ const PendingArrivalsDetails = () => {
                     )
                         : arrivals.length > 0 ? (
                             <div className='table-content w-full mt-5'>
-                                <Title title_content='Pending Arrivals' />
+                                <Title title_content='Pending Stock Purchasing Approvals' />
 
                                 {/* table of available stock detials */}
                                 <table className='w-full text-left mt-[20px]'>
@@ -71,7 +71,7 @@ const PendingArrivalsDetails = () => {
                                         {
                                             arrivals.map((arrival, index) => (
                                                 <tr key={index}>
-                                                    <td>{arrival["purchase_data"]}</td>
+                                                    <td>{arrival["purchase_date"].split('T')[0]}</td>
                                                     <td>{arrival['supplier_name']}</td>
                                                     <td>{`${arrival['stock_amount']} kg`}</td>
                                                     <td>{arrival['supplier_contact']}</td>

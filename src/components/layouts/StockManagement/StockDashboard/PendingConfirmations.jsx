@@ -96,8 +96,8 @@ const PendingConfirmations = () => {
                                                 <tr key={index}>
                                                     <td>{travel?.source?.infrastructure_name || 'undifiend'}</td>
                                                     <td>{travel?.source?.infrastructure_name || 'undifiend'}</td>
-                                                    <td>{`${travel["transportation_stock_amount"]} kg`}</td>
-                                                    <td>{travel["transportation_vehivle_number"]}</td>
+                                                    <td>{`${travel["stock_amount"]} kg`}</td>
+                                                    <td>{travel["transportation_vehicle_number"]}</td>
                                                     <td>{travel["transportation_driver_name"]}</td>
                                                     <td>{travel["transportation_contact_number"]}</td>
                                                     <td className='flex gap-x-2 mt-[4px]'>

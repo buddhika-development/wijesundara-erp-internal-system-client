@@ -68,7 +68,7 @@ const FullPendingArrivalsDetails = () => {
                                         {
                                             arrivals.map((arrival, index) => (
                                                 <tr key={index}>
-                                                    <td>{arrival["purchase_date"]}</td>
+                                                    <td>{arrival["purchase_date"].split('T')[0]}</td>
                                                     <td>{arrival['supplier_name']}</td>
                                                     <td>{`${arrival['stock_amount']} kg`}</td>
                                                     <td>{arrival['supplier_contact']}</td>

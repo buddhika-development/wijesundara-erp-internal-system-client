@@ -7,7 +7,7 @@ const page = () => {
   return (
     <div>
 
-      <Title />
+      <Title title_content='Pending Stock Purchases' />
 
       {/* Main body content area */}
       <div>
