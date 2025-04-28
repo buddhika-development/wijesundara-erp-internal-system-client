@@ -33,7 +33,7 @@ export default function GetPayslip() {
     }
   };
 
-  // Fetch payslip data
+  
   const fetchPayslip = async () => {
     if (!selectedEmployee) return;
     setLoading(true);
@@ -72,47 +72,42 @@ export default function GetPayslip() {
     });
   };
 
-  // Generate and download PDF
   const generatePDF = async () => {
     if (!payslipData || !selectedEmployee) return;
 
     const employee = employees.find((emp) => emp._id === selectedEmployee);
     const doc = new jsPDF();
 
-    // Load company logo
     let startY = 10;
     let logoHeight = 0;
     try {
       const logoUrl = "/companylogo.png";
       const { data, width, height } = await loadImage(logoUrl);
-      const maxHeight = 30; // Max logo height
+      const maxHeight = 30; 
       const aspectRatio = width / height;
-      logoHeight = maxHeight; // Fixed height
-      const logoWidth = logoHeight * aspectRatio; // Maintain aspect ratio
-      doc.addImage(data, "PNG", 10, startY, logoWidth, logoHeight); // Logo on the left
+      logoHeight = maxHeight; 
+      const logoWidth = logoHeight * aspectRatio; 
+      doc.addImage(data, "PNG", 10, startY, logoWidth, logoHeight); 
     } catch (error) {
       console.error("Error loading logo:", error);
-      logoHeight = 30; // Fallback height if logo fails
+      logoHeight = 30; 
     }
 
-    // Company Details (right-aligned)
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.text("Cosmo Exports Lanka (PVT) LTD", 200, startY + 5, { align: "right" });
+    doc.text("Wijesundara rice mills (PVT) LTD", 200, startY + 5, { align: "right" });
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("Phone: +94 77 086 4011 / +94 11 275 2373", 200, startY + 10, { align: "right" });
-    doc.text("496/1, Naduhena, Meegoda, Sri Lanka", 200, startY + 15, { align: "right" });
-    doc.text("Email: cosmoexportslanka@gmail.com", 200, startY + 20, { align: "right" });
+    doc.text("Phone: +94 77 098 7867 / +94 11 275 2373", 200, startY + 10, { align: "right" });
+    doc.text("494/1, Naduhena, Colombo, Sri Lanka", 200, startY + 15, { align: "right" });
+    doc.text("Email: wijesundaraRiceMills@outlook.com", 200, startY + 20, { align: "right" });
     startY += logoHeight + 5;
 
-    // Title
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.text("PAYSLIP", doc.internal.pageSize.getWidth() / 2, startY, { align: "center" });
     startY += 15;
 
-    // Employee Details
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.text("Employee Details:", 10, startY);
@@ -123,10 +118,13 @@ export default function GetPayslip() {
       10,
       startY + 5
     );
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, startY + 10);
+    doc.text(
+      `Generated Time: ${new Date().toLocaleString()}`,
+      10,
+      startY + 10
+    );
     startY += 20;
 
-    // Payslip Table
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
     doc.text("Payslip Details", 10, startY);
@@ -146,16 +144,15 @@ export default function GetPayslip() {
         ["8", "Employer EPF", `LKR ${payslipData.employerEPF.toLocaleString()}`],
         ["9", "Employer ETF", `LKR ${payslipData.employerETF.toLocaleString()}`],
         ["10", "Net Salary", { content: `LKR ${payslipData.netSalary.toLocaleString()}`, styles: { fontStyle: "bold" } }],
-        ["11", "Total Employer Cost", `LKR ${payslipData.totalEmployerCost.toLocaleString()}`],
       ],
       theme: "grid",
       styles: { font: "helvetica", fontSize: 10 },
       headStyles: { fillColor: [200, 200, 200], textColor: [0, 0, 0], fontStyle: "bold" },
       margin: { left: 10, right: 10 },
       columnStyles: {
-        0: { cellWidth: 20 }, // No. column
-        1: { cellWidth: 90 }, // Description column
-        2: { cellWidth: 70 }, // Amount column
+        0: { cellWidth: 20 }, 
+        1: { cellWidth: 90 }, 
+        2: { cellWidth: 70 }, 
       },
     });
 
@@ -168,21 +165,12 @@ export default function GetPayslip() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.text(`Net Salary: LKR ${payslipData.netSalary.toLocaleString()}`, 10, startY);
-    doc.text(`Total Employer Cost: LKR ${payslipData.totalEmployerCost.toLocaleString()}`, 10, startY + 5);
     startY += 15;
 
-    // Footer
+    
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("This is automated system genarated document!", doc.internal.pageSize.getWidth() / 2, startY, { align: "center" });
-    startY += 5;
-    doc.setFont("helvetica", "italic");
-    doc.text(
-      "This is a computer-generated payslip",
-      doc.internal.pageSize.getWidth() / 2,
-      startY,
-      { align: "center" }
-    );
+    doc.text("Thank you!", doc.internal.pageSize.getWidth() / 2, startY, { align: "center" });
 
     doc.save(`payslip_${employee.employee_name}_${year}_${month}.pdf`);
   };
@@ -316,12 +304,6 @@ export default function GetPayslip() {
                   <td className="border border-gray-500 p-2 font-medium text-black">Net Salary</td>
                   <td className="border border-gray-500 p-2 font-bold text-black">
                     {payslipData.netSalary.toLocaleString()}
-                  </td>
-                </tr>
-                <tr className="bg-white">
-                  <td className="border border-gray-500 p-2 font-medium text-black">Total Employer Cost</td>
-                  <td className="border border-gray-500 p-2 text-black">
-                    {payslipData.totalEmployerCost.toLocaleString()}
                   </td>
                 </tr>
               </tbody>

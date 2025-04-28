@@ -66,33 +66,38 @@ export default function AddAttendance() {
     setLoading(true);
     setError("");
 
-    const attendanceData = Object.keys(attendance).map((employeeId) => ({
-      employee_id: employeeId,
-      date,
-      attended: attendance[employeeId],
-    }));
-
-    if (attendanceData.length === 0) {
-      setError("No attendance selected!");
-      setLoading(false);
-      return;
-    }
-
     try {
+      // Fetch existing attendance records for the selected date
       const existingResponse = await axios.get(`http://localhost:5000/api/attendance/date/${date}`);
       const existingRecords = existingResponse.data.reduce((acc, record) => {
         acc[record.employee_id] = record;
         return acc;
       }, {});
 
+      // Create attendance data for ALL employees
+      const attendanceData = employees.map((employee) => ({
+        employee_id: employee._id,
+        date,
+        attended: attendance[employee._id] === true, // Default to false if not explicitly true
+      }));
+
+      if (attendanceData.length === 0) {
+        setError("No employees to mark attendance for!");
+        setLoading(false);
+        return;
+      }
+
+      // Update or create attendance records for all employees
       const responses = await Promise.all(
         attendanceData.map(async (data) => {
           if (existingRecords[data.employee_id]) {
+            // Update existing record
             return axios.put(
               `http://localhost:5000/api/attendance/update/${data.employee_id}/${date}`,
               { attended: data.attended }
             );
           } else {
+            // Create new record
             return axios.post("http://localhost:5000/api/attendance/add", data);
           }
         })
