@@ -20,7 +20,7 @@ const FinanceDashboard = () => {
   const [Approvemodal, setApprovemodal] = useState(false);
   const [approveAmount, setApproveAmount] = useState(""); 
   const [selectedBankAccount, setselectedbank] = useState(""); 
-    const [select, setSelectedTotalBank] = useState(""); 
+  const [select, setSelectedTotalBank] = useState(""); 
   
 
   const newdata = {
@@ -91,8 +91,6 @@ const FinanceDashboard = () => {
       const response = await axios.post("http://localhost:8080/Bank",{ bank_id:value });
       console.log("Bank API Response:", response.data);
 
-
-     
       const responseData = response.data || [];
       const formattedData = Array.isArray(responseData) ? responseData : [responseData];
       setData4(formattedData);
@@ -100,7 +98,6 @@ const FinanceDashboard = () => {
       console.error("Error calling Bank API:", error);
     }
   };
-
 
   const getRequests3 = async (newdata1) => {
     setLoading(true);
@@ -155,7 +152,6 @@ const FinanceDashboard = () => {
     console.log("Updated State (data):", data);
   }, [data]);
 
-
   const calculateTotal = () => {
     if (!Array.isArray(data4) || data4.length === 0) return 0;
 
@@ -177,17 +173,17 @@ const FinanceDashboard = () => {
     }
   };
 
-
   const handleAction = async (row, action, description = "", date = "", approveAmount = "", bankAccount = "") => {
     console.log(`Action "${action}" triggered for row:`, row);
     try {
       console.log("methana shape");
+      const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
       await axios.post(`http://localhost:8080/api/action/${row._id}`, {
         status: action,
         sec_id: "ST123",
         amount: row.amount,
         description: description,
-        date: date,
+        date: action === "pending" ? date : currentDate, // Use provided date for pending, else current date
         approveAmount: approveAmount,
         bankAccount: bankAccount, 
       }).then((response) => {});
@@ -247,6 +243,7 @@ const FinanceDashboard = () => {
     setselectedbank("");
     setSelectedRow(null);
   };
+
   const bankAccounts = [
     { value: "BO123", label: "BOC " },
     { value: "RD123", label: "RDB " },
@@ -282,11 +279,8 @@ const FinanceDashboard = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          
           <div className="bg-gray-400 rounded-lg p-4 text-white text-lg">
             <h2>Notifications</h2>
-
-            
             <div className="mt-4 max-h-45 overflow-y-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -361,8 +355,6 @@ const FinanceDashboard = () => {
               </table>
             </div>
           </div>
-
-        
           <div className="bg-gray-400 rounded-lg p-4 text-white text-lg">
             <h2>Reminders</h2>
             <div className="mt-4 max-h-45 overflow-y-auto">
@@ -419,7 +411,6 @@ const FinanceDashboard = () => {
               </table>
             </div>
           </div>
-
           <div className="bg-gray-400 rounded-lg p-4 text-white text-lg">
             <h2>Approved Payments</h2>
             <div className="mt-4 max-h-45 overflow-y-auto">
@@ -451,8 +442,6 @@ const FinanceDashboard = () => {
               </table>
             </div>
           </div>
-
-      
           <div className="bg-gray-400 rounded-lg p-4 text-white text-lg">
             <h2>Rejected Payments</h2>
             <div className="mt-4 max-h-45 overflow-y-auto">
@@ -484,7 +473,6 @@ const FinanceDashboard = () => {
           </div>
         </div>
       </div>
-
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -525,91 +513,84 @@ const FinanceDashboard = () => {
           </div>
         </div>
       )}
-
-{Approvemodal && selectedRow && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h3 className="text-lg font-semibold mb-4 text-black">Approve Transaction</h3>
-
-    
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Amount</label>
-        <input
-          type="number"
-          value={approveAmount} 
-          onChange={(e) => setApproveAmount(e.target.value)}
-          className={`mt-1 p-2 w-full border rounded-md text-black ${
-            approveAmount === "" || parseFloat(approveAmount) <= selectedRow.amount / 2
-              ? "border-red-500"
-              : ""
-          }`}
-          placeholder="Enter amount"
-          step="0.01"
-        />
-        {approveAmount === "" && (
-          <p className="text-red-500 text-sm mt-1">Amount is required.</p>
-        )}
-        {approveAmount !== "" && parseFloat(approveAmount) <= selectedRow.amount / 2 && (
-          <p className="text-red-500 text-sm mt-1">
-            Amount must be greater than {selectedRow.amount / 2}.
-          </p>
-        )}
-      </div>
-
-     
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Select Bank Account</label>
-        <select
-          value={selectedBankAccount}
-          onChange={(e) => setselectedbank(e.target.value)}
-          className={`mt-1 p-2 w-full border rounded-md text-black ${
-            selectedBankAccount === "" ? "border-red-500" : ""
-          }`}
-        >
-          <option value="" disabled>Select a bank account</option>
-          {bankAccounts.map((account) => (
-            <option key={account.value} value={account.value}>
-              {account.label}
-            </option>
-          ))}
-        </select>
-        {selectedBankAccount === "" && (
-          <p className="text-red-500 text-sm mt-1">Please select a bank account.</p>
-        )}
-      </div>
-
-      {/* Buttons */}
-      <div className="flex justify-end space-x-2">
-        <button
-          onClick={closeApproveModal}
-          className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => {
-            if (
-              approveAmount === "" ||
-              parseFloat(approveAmount) <= selectedRow.amount / 2 ||
-              selectedBankAccount === ""
-            ) {
-              return; 
-            }
-            handleApproveSubmit();
-          }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
-          disabled={
-            approveAmount === "" ||
-            parseFloat(approveAmount) <= selectedRow.amount / 2 ||
-            selectedBankAccount === ""
-          }
-        >
-          Submit
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      {Approvemodal && selectedRow && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-semibold mb-4 text-black">Approve Transaction</h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Amount</label>
+              <input
+                type="number"
+                value={approveAmount}
+                onChange={(e) => setApproveAmount(e.target.value)}
+                className={`mt-1 p-2 w-full border rounded-md text-black ${
+                  approveAmount === "" || parseFloat(approveAmount) <= selectedRow.amount / 2
+                    ? "border-red-500"
+                    : ""
+                }`}
+                placeholder="Enter amount"
+                step="0.01"
+              />
+              {approveAmount === "" && (
+                <p className="text-red-500 text-sm mt-1">Amount is required.</p>
+              )}
+              {approveAmount !== "" && parseFloat(approveAmount) <= selectedRow.amount / 2 && (
+                <p className="text-red-500 text-sm mt-1">
+                  Amount must be greater than {selectedRow.amount / 2}.
+                </p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Select Bank Account</label>
+              <select
+                value={selectedBankAccount}
+                onChange={(e) => setselectedbank(e.target.value)}
+                className={`mt-1 p-2 w-full border rounded-md text-black ${
+                  selectedBankAccount === "" ? "border-red-500" : ""
+                }`}
+              >
+                <option value="" disabled>Select a bank account</option>
+                {bankAccounts.map((account) => (
+                  <option key={account.value} value={account.value}>
+                    {account.label}
+                  </option>
+                ))}
+              </select>
+              {selectedBankAccount === "" && (
+                <p className="text-red-500 text-sm mt-1">Please select a bank account.</p>
+              )}
+            </div>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={closeApproveModal}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (
+                    approveAmount === "" ||
+                    parseFloat(approveAmount) <= selectedRow.amount / 2 ||
+                    selectedBankAccount === ""
+                  ) {
+                    return;
+                  }
+                  handleApproveSubmit();
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+                disabled={
+                  approveAmount === "" ||
+                  parseFloat(approveAmount) <= selectedRow.amount / 2 ||
+                  selectedBankAccount === ""
+                }
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

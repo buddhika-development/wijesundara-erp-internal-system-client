@@ -37,7 +37,7 @@ const FinanceDashboard = () => {
     try {
       const response = await axios.post("http://localhost:8080/pending", newdata);
       const responseData = response.data.requests || response.data;
-      console.log("hi hi",responseData);
+      console.log("hi hi", responseData);
       setData1(Array.isArray(responseData) ? responseData : [responseData]);
     } catch (error) {
       console.error("Fetching error:", error);
@@ -52,6 +52,22 @@ const FinanceDashboard = () => {
     getRequests2(newdata);
     getRequests4();
   }, []);
+
+  // Calculate financial metrics
+  const calculateStats = (transactions, secIds) => {
+    return transactions
+      .filter(row => secIds.includes(row.sec_id))
+      .reduce((total, row) => total + (parseFloat(row.amount) || 0), 0);
+  };
+
+  // Calculate Income (sec_id: "IN123")
+  const totalIncome = calculateStats(data2, ["IN123"]);
+
+  // Calculate Expenses (sec_id: "ST123", "HR123", "Tra123")
+  const totalExpenses = calculateStats(data2, ["ST123", "HR123", "Tra123"]);
+
+  // Calculate Total Balance (Income - Expenses)
+  const totalBalance = totalIncome - totalExpenses;
 
   const departmentMap = {
     HR123: "HR Department",
@@ -91,14 +107,11 @@ const FinanceDashboard = () => {
       `}</style>
 
       <div className="max-w-5xl mx-auto">
-        
         <div className="h-16 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-3xl font-bold flex items-center px-6 rounded-xl shadow-lg mb-6">
           Finance Dashboard
         </div>
 
-
         <div className="grid grid-cols-2 gap-6 mb-6">
-     
           <div className="bg-white rounded-xl shadow-lg p-6 h-64 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Balance Summary</h2>
             <div className="flex-1 space-y-2">
@@ -107,21 +120,21 @@ const FinanceDashboard = () => {
                   <span className="text-2xl">💰</span>
                   <span className="text-base font-medium text-gray-600">Total Balance</span>
                 </div>
-                <span className="text-lg font-semibold text-gray-900">LKT 5,200</span>
+                <span className="text-lg font-semibold text-gray-900">LKR {totalBalance.toFixed(2)}</span>
               </div>
               <div className="bg-green-50 rounded-lg p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">📥</span>
                   <span className="text-base font-medium text-green-700">Income</span>
                 </div>
-                <span className="text-lg font-semibold text-green-700">LKR 3,000</span>
+                <span className="text-lg font-semibold text-green-700">LKR {totalIncome.toFixed(2)}</span>
               </div>
               <div className="bg-red-50 rounded-lg p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">📤</span>
                   <span className="text-base font-medium text-red-700">Expenses</span>
                 </div>
-                <span className="text-lg font-semibold text-red-700">LKR 1,800</span>
+                <span className="text-lg font-semibold text-red-700">LKR {totalExpenses.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -148,9 +161,7 @@ const FinanceDashboard = () => {
           </div>
         </div>
 
-     
         <div className="grid grid-cols-2 gap-6">
-         
           <div className="bg-white rounded-xl shadow-lg p-6 h-80 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
             <div className="flex-1 overflow-y-auto custom-scroll space-y-3">
@@ -183,7 +194,6 @@ const FinanceDashboard = () => {
             </div>
           </div>
 
-         
           <div className="bg-white rounded-xl shadow-lg p-6 h-80 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Reminders</h2>
             <div className="flex-1 overflow-y-auto custom-scroll space-y-3">
