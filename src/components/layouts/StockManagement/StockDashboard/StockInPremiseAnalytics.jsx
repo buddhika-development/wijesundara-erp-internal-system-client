@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import Title from '@/components/ui/Titles/Title';
 
-const StockAnalytics = () => {
+const StockInPremiseAnalytics = () => {
   const [availableStockDetails, setAvailableStockDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,26 +45,19 @@ const StockAnalytics = () => {
       // Create new chart
       const ctx = chartRef.current.getContext('2d');
       chartInstance.current = new Chart(ctx, {
-        type: 'bar',
+        type: 'polarArea',
         data: {
-          labels: availableStockDetails.map((availableStockDetail) => availableStockDetail["rice_type"]),
+          labels: availableStockDetails.map((availableStockDetail) => availableStockDetail["infrastructure_name"]),
           datasets: [{
             label: 'Available Stock Amount',
             data: availableStockDetails.map((availableStockDetail) => availableStockDetail["stock_amount"]),
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
           }]
         },
         options: {
           responsive: true,
           plugins: {
-            title: {
-              display: true,
-              text: 'Rice Stock Availability'
-            },
             legend: {
-              position: 'top',
+              position: 'bottom',
             }
           }
         }
@@ -88,13 +81,13 @@ const StockAnalytics = () => {
   if (availableStockDetails.length === 0) return <div className="p-4">No stock data available.</div>;
 
   return (
-    <div className="p-7 bg-white rounded-lg w-full shadow-md mt-5">
-      <Title title_content='Stock Availability Analytics' />
-      <div className="relative h-100 mt-5">
+    <div className="p-7 bg-white rounded-lg w-fit shadow-md mt-5">
+      <Title title_content='Premises Stock Availability' />
+      <div className="relative h-100 w-full mt-5">
         <canvas ref={chartRef} />
       </div>
     </div>
   );
 };
 
-export default StockAnalytics;
+export default StockInPremiseAnalytics;
