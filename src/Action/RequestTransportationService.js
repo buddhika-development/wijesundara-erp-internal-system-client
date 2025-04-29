@@ -45,6 +45,18 @@ const RequestTransportationService = async (preState, formData) => {
         body : urlencodedData
     })
 
+    if (!response.ok) {
+        return {
+            success : false,
+            message : 'Something went wrong in data insertion process. Please try again.'
+        }
+    }
+
+    return {
+        success : true,
+        message : 'Successfully request for transportation service.'
+    }
+
     
 
     console.log(`Source location : ${trip_source}`)

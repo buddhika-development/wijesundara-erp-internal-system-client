@@ -141,6 +141,12 @@ const page = () => {
               <p className='bg-red-100 border-[1px] border-red-200 py-2.5 text-red-800 text-center rounded-lg text-sm font-semibold mt-2.5'>{state.message}</p>
             )
           }
+
+          {
+            state.success && (
+              <p className='bg-green-100 border-[1px] border-green-200 text-sm text-green-800 py-2.5 rounded-lg text-center mt-2'>{state.message}</p>
+            )
+          }
           
         </div>
 
