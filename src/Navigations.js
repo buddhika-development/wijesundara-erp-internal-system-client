@@ -4,6 +4,7 @@ import { BiBuildings } from "react-icons/bi";
 import { AiOutlineProduct } from "react-icons/ai";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { RiPriceTag3Line } from "react-icons/ri";
+import { FaChartLine } from "react-icons/fa6";
 
 // extract website link
 const WEBSITE_URI = process.env.SITE_URI
@@ -33,6 +34,12 @@ export const MainNavigations = [
         'link-content' : 'Request Transport',
         'link' : `${WEBSITE_URI}/StockManager/RequestTransport`,
         'icon' : <MdOutlineLocalShipping/>
+    },
+    {
+        'link-content' : "Analitics",
+        'link' : `${WEBSITE_URI}/StockManager/Analitics`,
+        'icon' : <FaChartLine/>
+
     }
     // {
     //     'link-content' : 'Team',
