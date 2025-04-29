@@ -56,7 +56,7 @@ export const StockNavigation = [
     },
     {
         'link-content' : 'Purchase confirmations',
-        'link' :`${WEBSITE_URI}/StockManager/Stock/StockArrival`
+        'link' :`${WEBSITE_URI}/StockManager/Stock/StockPurchasingRequest`
     },
     {
         'link-content' : 'Add Stock',

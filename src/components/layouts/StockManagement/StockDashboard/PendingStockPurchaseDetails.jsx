@@ -4,22 +4,22 @@ import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
 import { MdDeleteOutline } from "react-icons/md";
 
-const PendingArrivalsDetails = () => {
+const PendingStockPurchaseDetails = () => {
 
-    const [arrivals, setArrivals] = useState([])
+    const [pendingStockPurchase, setPendingStockPurchase] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
 
     useEffect(() => {
         const fetch_data = async () => {
             try {
-                const arrivals_response = await fetch('http://localhost:8080/api/purchase/purchase_stats')
+                const pendingStockPurchaseRequest = await fetch('http://localhost:8080/api/purchase/purchase_stats')
 
-                if (arrivals_response.ok) {
-                    const arrival_detilas = await arrivals_response.json()
+                if (pendingStockPurchaseRequest.ok) {
+                    const pendingStockPurchase = await pendingStockPurchaseRequest.json()
 
-                    const temp_data = arrival_detilas.slice(0, 12)
-                    setArrivals(temp_data)
+                    const temp_data = pendingStockPurchase.filter((pendingStock) => pendingStock["purchase_details"]["purchase_status"] == "pending").slice(0, 12)
+                    setPendingStockPurchase(temp_data)
                 }
                 else {
                     throw new Error("Something went wrong in data fetching.....")
@@ -35,7 +35,7 @@ const PendingArrivalsDetails = () => {
         }
 
         fetch_data()
-    }, [arrivals])
+    }, [pendingStockPurchase])
 
 
     // function related to remove the element from the database
@@ -76,7 +76,7 @@ const PendingArrivalsDetails = () => {
                     : error ? (
                         <p>{error}</p>
                     )
-                        : arrivals.length > 0 ? (
+                        : pendingStockPurchase.length > 0 ? (
                             <div className='table-content w-full mt-5'>
                                 <Title title_content='Pending Stock Purchasing Approvals' />
 
@@ -95,17 +95,17 @@ const PendingArrivalsDetails = () => {
                                     <tbody>
 
                                         {
-                                            arrivals.map((arrival, index) => (
+                                            pendingStockPurchase.map((stock, index) => (
                                                 <tr key={index}>
-                                                    <td>{arrival["purchase_details"]["purchase_date"].split('T')[0]}</td>
-                                                    <td>{arrival["supplier"]['supplier_name']}</td>
-                                                    <td>{`${arrival["purchase_details"]['stock_amount']} kg`}</td>
-                                                    <td>{arrival["supplier"]['supplier_contact']}</td>
-                                                    <td>{`${arrival["supplier"]['supplier_address_line_one']} , ${arrival["supplier"]['supplier_address_line_two']} , ${arrival["supplier"]['supplier_address_city']}`}</td>
+                                                    <td>{stock["purchase_details"]["purchase_date"].split('T')[0]}</td>
+                                                    <td>{stock["supplier"]['supplier_name']}</td>
+                                                    <td>{`${stock["purchase_details"]['stock_amount']} kg`}</td>
+                                                    <td>{stock["supplier"]['supplier_contact']}</td>
+                                                    <td>{`${stock["supplier"]['supplier_address_line_one']} , ${stock["supplier"]['supplier_address_line_two']} , ${stock["supplier"]['supplier_address_city']}`}</td>
                                                     <td>
                                                         <button 
                                                             className='w-[32px] h-[32px] flex justify-center items-center text-[16px] bg-red-100 text-red-900 rounded-md border-[1px] border-red-200 cursor-pointer'
-                                                            onClick={() => { remove_purchase_request(arrival["purchase_details"]["_id"])}}
+                                                            onClick={() => { remove_purchase_request(stock["purchase_details"]["_id"])}}
                                                         >
                                                             <MdDeleteOutline/>
                                                         </button>
@@ -127,4 +127,4 @@ const PendingArrivalsDetails = () => {
     )
 }
 
-export default PendingArrivalsDetails
+export default PendingStockPurchaseDetails
