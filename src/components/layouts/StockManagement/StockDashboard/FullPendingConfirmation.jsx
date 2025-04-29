@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import PendingConfrimationTransportation from './PendingConfrimationTransportation';
 import WaitingTransportation from './WaitingTransportation';
+import PendingTransportationServiceRequestsDetails from './PendingTransportationServiceRequestsDetails';
 
 const FullPendingConfirmation = () => {
 
@@ -10,6 +11,7 @@ const FullPendingConfirmation = () => {
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
+    const [pendingTransportationServiceRequests, setPendingTransportationServiceRequests] = useState([])
     const [pendingConfirmations, setPendingConfirmations] = useState([])
     const [doneTransportaions, setDoneTransportaions] = useState([])
     const [witingTransportations, setWitingTransportations] = useState([])
@@ -40,7 +42,32 @@ const FullPendingConfirmation = () => {
 
         fetch_date()
 
-    }, [])
+    }, [travels])
+
+
+    useEffect(() => {
+
+        const fetchData = async() => {
+            try{
+                const waitingTransportationRequestsResponse = await fetch('http://localhost:8080/api/transportaion_task/transportation_tasks/waiting')
+
+                if(!waitingTransportationRequestsResponse.ok) {
+                    throw new Error("Data fetching processing process failed...")
+                }
+
+                const waitingTransportationRequests = await waitingTransportationRequestsResponse.json()
+                setPendingTransportationServiceRequests(waitingTransportationRequests)
+                
+            }
+            catch(err) {
+                console.log(`Something went wrong in waiting ransportain request data accessing processs... ${err}`)
+            }
+        }
+        
+        fetchData()
+        
+    }, [pendingTransportationServiceRequests])
+
 
 
     useEffect(() => {
@@ -102,6 +129,9 @@ const FullPendingConfirmation = () => {
                                 {/* pending confirmation details */}
                                 <PendingConfrimationTransportation pendingConfirmations={pendingConfirmations} />
 
+                                {/* waiting transportaion request details */}
+                                <PendingTransportationServiceRequestsDetails pendingTransportations={pendingTransportationServiceRequests}/>
+                                
                                 {/* waiting transportaion detials */}
                                 <WaitingTransportation waitingTransportation={witingTransportations} />
                             </div>
