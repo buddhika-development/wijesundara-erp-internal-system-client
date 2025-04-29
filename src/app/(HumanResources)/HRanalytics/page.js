@@ -703,7 +703,7 @@ export default function Analytics() {
                       <table className="w-full border-collapse">
                         <thead>
                           <tr className="bg-gray-50 text-gray-700">
-                            <th className="p-3 text-left font-medium">Job一緒Role</th>
+                            <th className="p-3 text-left font-medium">Job一Role</th>
                             <th className="p-3 text-left font-medium">Total Cost</th>
                           </tr>
                         </thead>
