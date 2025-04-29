@@ -1,8 +1,11 @@
+import StockAnalytics from '@/components/layouts/StockManagement/StockDashboard/StockAnalytics'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <StockAnalytics />
+    </div>
   )
 }
 
