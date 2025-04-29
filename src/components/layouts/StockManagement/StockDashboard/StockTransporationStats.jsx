@@ -2,6 +2,9 @@
 
 import React, { useEffect, useState } from 'react'
 import SmallStatCard from '@/components/layouts/StockManagement/StaisticsCards/SmallStatCard'
+import { MdOutlinePendingActions } from "react-icons/md";
+import { BsHouseCheck } from "react-icons/bs";
+import { MdOutlineLocalShipping } from "react-icons/md";
 
 const StockTransporationStats = () => {
 
@@ -59,9 +62,9 @@ const StockTransporationStats = () => {
                 )
                 : (
                     <div className='secondary-stat'>
-                        <SmallStatCard title='Total waiting travels ' amount={totalWaitingTravels.length} />
-                        <SmallStatCard title='Pending confirmations' amount={totalProcessingTravels.length} />
-                        <SmallStatCard title='Total active transporations' amount={transportionTask.length} />
+                        <SmallStatCard title='Total waiting travels ' amount={totalWaitingTravels.length} icon={<MdOutlinePendingActions />} />
+                        <SmallStatCard title='Pending confirmations' amount={totalProcessingTravels.length} icon={<BsHouseCheck />} />
+                        <SmallStatCard title='Total active transporations' amount={transportionTask.length} icon={<MdOutlineLocalShipping />} />
                     </div>
                 )
             }
