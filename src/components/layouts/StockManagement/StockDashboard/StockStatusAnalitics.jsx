@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import Title from '@/components/ui/Titles/Title';
 
-const StockInPremiseAnalytics = () => {
+const StockStatusAnalitics = () => {
   const [availableStockDetails, setAvailableStockDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,6 +21,11 @@ const StockInPremiseAnalytics = () => {
         }
 
         const stockAvailability = await stockAvailabilityResponse.json();
+
+        // shape the data for give valueble insights to user
+        
+
+        
         setAvailableStockDetails(stockAvailability);
       } catch (err) {
         console.log(`Something went wrong in stock available stock details fetching process ${err}`);
@@ -47,7 +52,7 @@ const StockInPremiseAnalytics = () => {
       chartInstance.current = new Chart(ctx, {
         type: 'polarArea',
         data: {
-          labels: availableStockDetails.map((availableStockDetail) => availableStockDetail["infrastructure_name"]),
+          labels: availableStockDetails.map((availableStockDetail) => availableStockDetail["Storage"]),
           datasets: [{
             label: 'Available Stock Amount',
             data: availableStockDetails.map((availableStockDetail) => availableStockDetail["stock_amount"]),
@@ -81,7 +86,7 @@ const StockInPremiseAnalytics = () => {
   if (availableStockDetails.length === 0) return <div className="p-4">No stock data available.</div>;
 
   return (
-    <div className="p-7 bg-white rounded-lg w-1/2 shadow-md mt-5">
+    <div className="p-7 bg-white rounded-lg w-fit shadow-md mt-5">
       <Title title_content='Premises Stock Availability' />
       <div className="relative h-100 w-full mt-5">
         <canvas ref={chartRef} />
@@ -90,4 +95,4 @@ const StockInPremiseAnalytics = () => {
   );
 };
 
-export default StockInPremiseAnalytics;
+export default StockStatusAnalitics;
