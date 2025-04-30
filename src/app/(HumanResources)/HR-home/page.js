@@ -24,7 +24,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("http://localhost:5000/api/salary/approvedRequests");
+      const response = await axios.get("http://localhost:5000/approvedRequests");
       setApprovedRequests(response.data || []);
     } catch (err) {
       console.error("Error fetching approved requests:", err.message);
