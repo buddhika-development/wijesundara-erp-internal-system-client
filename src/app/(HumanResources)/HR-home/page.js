@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import axios from "axios";
 import "react-calendar/dist/Calendar.css";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
@@ -10,10 +11,28 @@ export default function Home() {
   const router = useRouter();
   const [date, setDate] = useState(null);
   const [reminders, setReminders] = useState({});
+  const [approvedRequests, setApprovedRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setDate(new Date());
+    fetchApprovedRequests();
   }, []);
+
+  const fetchApprovedRequests = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("http://localhost:5000/approvedRequests");
+      setApprovedRequests(response.data || []);
+    } catch (err) {
+      console.error("Error fetching approved requests:", err.message);
+      setError("Failed to load approved payment requests.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDateClick = (selectedDate) => {
     const reminder = prompt("Enter a reminder:");
@@ -91,8 +110,31 @@ export default function Home() {
           {/* Notifications */}
           <div className="col-span-6 bg-white p-6 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold text-gray-800 mb-5">Notifications</h2>
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-500">
-              <span>No notifications yet</span>
+            <div className="h-64 bg-gray-50 rounded-lg overflow-y-auto p-4">
+              {loading ? (
+                <p className="text-gray-500">Loading approved payments...</p>
+              ) : error ? (
+                <p className="text-red-500">{error}</p>
+              ) : approvedRequests.length === 0 ? (
+                <p className="text-gray-500">No approved payment requests found.</p>
+              ) : (
+                <ul className="space-y-3">
+                  {approvedRequests.map((request, index) => (
+                    <li
+                      key={index}
+                      className="p-3 bg-white rounded-lg shadow-sm border border-gray-100 flex justify-between items-center"
+                    >
+                      <div>
+                        <p className="text-gray-800 font-medium">{request.description}</p>
+                        <p className="text-gray-600 text-sm">
+                          Amount: {request.amount.toLocaleString()} | Bank Account: {request.bankAccount || "N/A"}
+                        </p>
+                        <p className="text-green-600 text-sm font-medium">Status: Approved</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
@@ -179,6 +221,12 @@ export default function Home() {
         }
         .border-gray-100 {
           border-color: #f3f4f6;
+        }
+        .overflow-y-auto {
+          overflow-y: auto;
+        }
+        .space-y-3 > * + * {
+          margin-top: 0.75rem;
         }
       `}</style>
     </div>
