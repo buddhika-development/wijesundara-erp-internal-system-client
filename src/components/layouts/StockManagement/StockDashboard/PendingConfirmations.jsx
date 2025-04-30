@@ -23,7 +23,7 @@ const PendingConfirmations = () => {
                 }
 
                 const travel_details = await response.json()
-                const pending_travel_details = travel_details.filter((item) => item["transportation_status"] == "processing")
+                const pending_travel_details = travel_details.filter((item) => item["transport_task"]["transportation_status"] == "processing")
                 setTravels(pending_travel_details)
             }
             catch (err) {
@@ -43,25 +43,22 @@ const PendingConfirmations = () => {
     const orderArrivalConfirmation = async (task_id) => {
 
         const userConfirmation = confirm("Confirm the stock arrivals ? ")
-
-        if(userConfirmation) {
+        if (userConfirmation) {
 
             const end_point_url = new URL(`http://localhost:8080/api/transportaion_task/update_task/${task_id}`)
-
             const response = await fetch(end_point_url, {
-                method : "PATCH"
+                method: "PATCH"
             })
-
-            if(response.ok) {
-                alert("Success")
+            if (response.ok) {
+                alert("Successfully keep record about transportation..")
             }
-            else{
+            else {
                 alert("Something went wrong")
             }
         }
-        
+
     }
-    
+
 
     return (
         <div>
@@ -96,13 +93,14 @@ const PendingConfirmations = () => {
                                                 <tr key={index}>
                                                     <td>{travel?.source?.infrastructure_name || 'undifiend'}</td>
                                                     <td>{travel?.source?.infrastructure_name || 'undifiend'}</td>
-                                                    <td>{`${travel["stock_amount"]} kg`}</td>
-                                                    <td>{travel["transportation_vehicle_number"]}</td>
-                                                    <td>{travel["transportation_driver_name"]}</td>
-                                                    <td>{travel["transportation_contact_number"]}</td>
+                                                    <td>{`${travel["transport_task"]["stock_amount"]} kg`}</td>
+                                                    <td>{travel["transportaion_task_assignment"]["transportation_vehicle_number"]}</td>
+                                                    <td>{travel["transportaion_task_assignment"]["transportation_driver_name"]}</td>
+                                                    <td>{travel["transportaion_task_assignment"]["transportation_contact_number"]}</td>
                                                     <td className='flex gap-x-2 mt-[4px]'>
                                                         <button className='bg-red-100 border-[1px] rounded-xl border-red-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center'><MdErrorOutline className='w-[20px] h-[20px] text-red-800' /></button>
-                                                        <button onClick={() => orderArrivalConfirmation(travel["_id"])} className='bg-green-100 border-[1px] rounded-xl border-green-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center' ><GiConfirmed className='h-[20px] w-[20px] text-green-800' /></button>
+
+                                                        <button onClick={() => orderArrivalConfirmation(travel["transport_task"]["_id"])} className='bg-green-100 border-[1px] rounded-xl border-green-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center' ><GiConfirmed className='h-[20px] w-[20px] text-green-800' /></button>
                                                     </td>
                                                 </tr>
                                             ))

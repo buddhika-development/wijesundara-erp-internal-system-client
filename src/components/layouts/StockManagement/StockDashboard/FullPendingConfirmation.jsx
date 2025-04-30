@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import PendingConfrimationTransportation from './PendingConfrimationTransportation';
 import WaitingTransportation from './WaitingTransportation';
 import PendingTransportationServiceRequestsDetails from './PendingTransportationServiceRequestsDetails';
+import PendingConfirmations from './PendingConfirmations';
 
 const FullPendingConfirmation = () => {
 
@@ -66,7 +67,7 @@ const FullPendingConfirmation = () => {
         
         fetchData()
         
-    }, [pendingTransportationServiceRequests])
+    }, [])
 
 
 
@@ -110,9 +111,7 @@ const FullPendingConfirmation = () => {
         filter_waiting_transportations()
         filter_done_transportation()
         
-    }, [travels])
-
-    console.log(pendingConfirmations)
+    }, [])
 
     return (
         <div>
@@ -126,14 +125,13 @@ const FullPendingConfirmation = () => {
                         : travels.length > 0 ? (
 
                             <div>
-                                {/* pending confirmation details */}
-                                <PendingConfrimationTransportation pendingConfirmations={pendingConfirmations} />
 
+                                {/* waiting transportaion detials */}
+                                <PendingConfirmations />
+                                
                                 {/* waiting transportaion request details */}
                                 <PendingTransportationServiceRequestsDetails pendingTransportations={pendingTransportationServiceRequests}/>
                                 
-                                {/* waiting transportaion detials */}
-                                <WaitingTransportation waitingTransportation={witingTransportations} />
                             </div>
                         )
                             : (
