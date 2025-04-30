@@ -3,8 +3,9 @@ import StockStatistics from '@/components/layouts/StockManagement/StockDashboard
 import StockTransporationStats from '@/components/layouts/StockManagement/StockDashboard/StockTransporationStats'
 import PendingTransportationStats from '@/components/layouts/StockManagement/StockDashboard/PendingTransportationStats'
 import React from 'react'
-import PendingArrivalsDetails from '@/components/layouts/StockManagement/StockDashboard/PendingArrivalsDetails'
+import PendingStockPurchaseDetails from '@/components/layouts/StockManagement/StockDashboard/PendingStockPurchaseDetails'
 import PendingConfirmations from '@/components/layouts/StockManagement/StockDashboard/PendingConfirmations'
+import RecentBidDetails from '@/components/layouts/StockManagement/StockDashboard/RecentBidDetails'
 
 const page = () => {
   return (
@@ -22,13 +23,14 @@ const page = () => {
         {/* available stock details */}
         <AvailableStockDetails />
         {/* pending customer transportion detials */}
-        <PendingTransportationStats />
+        <RecentBidDetails />
       </div>
       
-      <PendingArrivalsDetails />
-
       <PendingConfirmations />
+
+      <PendingStockPurchaseDetails />
       
+
     </div>
   )
 }

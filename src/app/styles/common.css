@@ -70,8 +70,14 @@ td, th {
     border: none;
 }
 
+.table-content table tbody tr{
+    height: 40px;
+    font-size: 12px;
+}
+
 input, select, option {
-    height: 50px;
+    height: 40px;
+    font-size: 14px;
     background-color: var(--base-background);
     border: 1px solid var(--input-stroke);
     border-radius: 10px;
@@ -92,6 +98,7 @@ input:focus {
 .input-section {
     display: flex;
     flex-direction: column;
+    margin-bottom: 12px;
 }
 
 label {

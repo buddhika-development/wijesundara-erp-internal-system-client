@@ -14,9 +14,8 @@ const page = () => {
 
     const [state, formAction, isPending] =  useActionState(AddStockActionHandler, initialState)
         
-    const [riceType, setRiceType] = useState([])
-    const [supplier, setSupplier] = useState([])
-
+    const [bids, setBids] = useState([])
+    const [supplierBids, setSupplierBids] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
 
@@ -24,19 +23,16 @@ const page = () => {
         const fetch_data = async () => {
 
             try {
-                const rice_varient_response = await fetch('http://localhost:8080/api/rice_varient')
-                const supplier_response = await fetch('http://localhost:8080/api/suppliers')
 
-                if (!rice_varient_response.ok || !supplier_response.ok) {
-                    throw new Error("Something went wrong in data fecthing....")
+                const bid_response = await fetch('http://localhost:8080/api/bids')
+
+                if(!bid_response.ok) {
+                    throw new Error("Something went wrong in bid data fetching process...")
                 }
 
-                const rice_varients = await rice_varient_response.json()
-                const supplier_detail = await supplier_response.json()
+                const bids = await bid_response.json()
+                setBids(bids)            }
 
-                setRiceType(rice_varients)
-                setSupplier(supplier_detail)
-            }
             catch (err) {
                 console.log("Something went wrong....")
                 setError(err)
@@ -51,6 +47,17 @@ const page = () => {
     }, [])
 
 
+    // onchange function related to how bids are actually showing off in the form`
+    const handleSupplierSelection = (e) => {
+        const supplier_id = e.target.value
+        selectSupplierBids(supplier_id)
+    }
+
+    const selectSupplierBids = (supplier_id) => {
+        const supplier_bids = bids.filter((bid) => bid["supplier_details"]["_id"] == supplier_id)
+        setSupplierBids(supplier_bids)
+    }
+ 
     return (
         <div>
 
@@ -68,10 +75,10 @@ const page = () => {
                             <Form action={formAction} className='flex flex-col mt-5 gap-y-4'>
                                 <div className="input-section">
                                     <label htmlFor="supplier">Stock Supplier</label>
-                                    <select name="supplier">
+                                    <select name="supplier" onChange={handleSupplierSelection}>
                                         {
-                                            supplier.map((supplier, index) => (
-                                                <option key={index} value={supplier["_id"]} >{supplier["supplier_name"]}</option>
+                                            bids.map((bid, index) => (
+                                                <option key={index} value={bid["supplier_details"]["_id"]} >{bid["supplier_details"]["supplier_name"]}</option>
                                             ) )
                                         }
                                     </select>
@@ -81,8 +88,8 @@ const page = () => {
                                     <label htmlFor="rice_type">Type of Rice</label>
                                     <select name="rice_type">
                                         {
-                                            riceType.map((type, index) => (
-                                                <option key={index} value={type["_id"]} >{type["rice_type"]}</option>
+                                            supplierBids.map((bid, index) => (
+                                                <option key={index} value={bid["rice_varient"]["_id"]} >{bid["rice_varient"]["rice_type"]}</option>
                                             ) )
                                         }
                                     </select>

@@ -1,5 +1,5 @@
 import AvailableStockDetails from '@/components/layouts/StockManagement/StockDashboard/AvailableStockDetails'
-import PendingArrivalsDetails from '@/components/layouts/StockManagement/StockDashboard/PendingArrivalsDetails'
+import PendingArrivalsDetails from '@/components/layouts/StockManagement/StockDashboard/PendingStockPurchaseDetails'
 import PendingConfirmations from '@/components/layouts/StockManagement/StockDashboard/PendingConfirmations'
 import ProcessedStockDetails from '@/components/layouts/StockManagement/StockDashboard/ProcessedStockDetails'
 import StockStatistics from '@/components/layouts/StockManagement/StockDashboard/StockStatistics'
@@ -31,11 +31,11 @@ const page = () => {
         </div>
       </div>
 
-      {/* pending arrivals details */}
-      <PendingArrivalsDetails />
-
       {/* pending confrimation detials */}
       <PendingConfirmations />
+
+      {/* pending arrivals details */}
+      <PendingArrivalsDetails />
       
     </div>
   )

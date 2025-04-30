@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import LargeStatCard from '@/components/layouts/StockManagement/StaisticsCards/LargeStatCard'
+import { MdOutlineLibraryAddCheck } from "react-icons/md";
+import { LuFactory } from "react-icons/lu";
+import { LuClipboardCheck } from "react-icons/lu";
+import { TfiShoppingCartFull } from "react-icons/tfi";
 
 const StockStatistics = () => {
 
@@ -96,10 +100,10 @@ const StockStatistics = () => {
                     <p>Loading....</p>
                 ) : stock.length > 0 ? (
                     <div className='flex justify-between gap-x-[16px]'>
-                        <LargeStatCard title='Ready stock availability' stock={readyStock} />
-                        <LargeStatCard title='Processing stock' stock={processingStock} />
-                        <LargeStatCard title='Ready to delivery' stock={processedStock} />
-                        <LargeStatCard title='Total stock amount' stock={totalStock} />
+                        <LargeStatCard title='Ready stock availability' stock={readyStock} icon={<MdOutlineLibraryAddCheck />} />
+                        <LargeStatCard title='Processing stock' stock={processingStock} icon={<LuFactory />} />
+                        <LargeStatCard title='Ready to delivery' stock={processedStock} icon={<LuClipboardCheck />} />
+                        <LargeStatCard title='Total stock amount' stock={totalStock} icon={<TfiShoppingCartFull />} />
                     </div>
                 ) :
                     (
