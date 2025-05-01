@@ -5,6 +5,7 @@ import { AiOutlineProduct } from "react-icons/ai";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { RiPriceTag3Line } from "react-icons/ri";
 import { FaChartLine } from "react-icons/fa6";
+import { MdOutlineNotifications } from "react-icons/md";
 
 // extract website link
 const WEBSITE_URI = process.env.SITE_URI
@@ -40,6 +41,11 @@ export const MainNavigations = [
         'link' : `${WEBSITE_URI}/StockManager/Analitics`,
         'icon' : <FaChartLine/>
 
+    },
+    {
+        'link-content' : 'Notifications',
+        'link': `${WEBSITE_URI}/StockManager/Notifications`,
+        'icon' : <MdOutlineNotifications />
     }
     // {
     //     'link-content' : 'Team',
