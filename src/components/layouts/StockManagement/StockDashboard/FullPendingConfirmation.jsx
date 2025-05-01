@@ -67,7 +67,7 @@ const FullPendingConfirmation = () => {
         
         fetchData()
         
-    }, [])
+    }, [pendingTransportationServiceRequests])
 
 
 
@@ -126,7 +126,7 @@ const FullPendingConfirmation = () => {
                     : error ? (
                         <p>{error}</p>
                     )
-                        : travels.length > 0 ? (
+                        : pendingTransportationServiceRequests.length > 0 ? (
 
                             <div>
 
