@@ -115,6 +115,10 @@ const FullPendingConfirmation = () => {
 
     return (
         <div>
+            {/* waiting transportaion detials */}
+            <PendingConfirmations />
+
+
             {
                 isLoading ? (
                     <p>Loading....</p>
@@ -126,16 +130,15 @@ const FullPendingConfirmation = () => {
 
                             <div>
 
-                                {/* waiting transportaion detials */}
-                                <PendingConfirmations />
-                                
                                 {/* waiting transportaion request details */}
                                 <PendingTransportationServiceRequestsDetails pendingTransportations={pendingTransportationServiceRequests}/>
                                 
                             </div>
                         )
                             : (
-                                <p>There are no valid data...</p>
+                                <div className='table-content mt-5'>
+                                    <p>Ooops! There are no any details to show.</p>
+                                </div>
                             )
             }
 

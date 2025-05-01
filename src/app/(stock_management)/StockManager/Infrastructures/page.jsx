@@ -1,5 +1,6 @@
 "use client"
 
+import Title from '@/components/ui/Titles/Title'
 import React, { useEffect, useState } from 'react'
 
 const page = () => {
@@ -36,8 +37,10 @@ const page = () => {
   }, [])
   
   return (
-    <div>
+    <div className='table-content text-left'>
 
+      <Title title_content='Infrastructure premises company owned' />
+      
       {
         isLoading ? (
           <p>Loading.....</p>
@@ -46,7 +49,7 @@ const page = () => {
           <p>{error}</p>
         )
         : infrastructures.length > 0 ? (
-          <div className='table-content text-left'>
+          <div>
             <table>
               <thead>
                 <tr>
@@ -72,7 +75,9 @@ const page = () => {
           </div>
         )
         : (
-          <p>There are no data..</p>
+          <div className='mt-5'>
+            <p>Opps! there are no any infrastructure details...</p>
+          </div>
         )
       }
     </div>

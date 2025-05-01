@@ -62,7 +62,9 @@ const PendingConfirmations = () => {
 
 
     return (
-        <div>
+        <div className='table-content w-full mt-5'>
+            <Title title_content='Pending confirmations' />
+
             {
                 isLoading ? (
                     <p>Loading....</p>
@@ -71,8 +73,7 @@ const PendingConfirmations = () => {
                         <p>{error}</p>
                     )
                         : travels.length > 0 ? (
-                            <div className='table-content w-full mt-5'>
-                                <Title title_content='Pending confirmations' />
+                            <div>
 
                                 {/* table of available stock detials */}
                                 <table className='w-full text-left mt-[20px]'>
@@ -113,7 +114,9 @@ const PendingConfirmations = () => {
                             </div>
                         )
                             : (
-                                <p>There are no valid data...</p>
+                                <div className='mt-5'>
+                                    <p>Wow! there are no any transporation confimations.</p>
+                                </div>
                             )
             }
 

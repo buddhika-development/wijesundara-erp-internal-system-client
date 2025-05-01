@@ -67,7 +67,8 @@ const PendingStockPurchaseDetails = () => {
     }
 
     return (
-        <div>
+        <div className='table-content w-full mt-5'>
+            <Title title_content='Pending Stock Purchasing Approvals' />
 
             {
                 isLoading ? (
@@ -77,8 +78,7 @@ const PendingStockPurchaseDetails = () => {
                         <p>{error}</p>
                     )
                         : pendingStockPurchase.length > 0 ? (
-                            <div className='table-content w-full mt-5'>
-                                <Title title_content='Pending Stock Purchasing Approvals' />
+                            <div>
 
                                 {/* table of available stock detials */}
                                 <table className='w-full text-left mt-[20px]'>
@@ -119,7 +119,10 @@ const PendingStockPurchaseDetails = () => {
                             </div>
                         )
                             : (
-                                <p>There are not data</p>
+
+                                <div className='mt-5'>
+                                    <p>Opps! There are no any pending stock purchases.</p>
+                                </div>
                             )
             }
 

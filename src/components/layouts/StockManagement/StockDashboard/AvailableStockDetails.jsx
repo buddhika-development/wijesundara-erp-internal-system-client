@@ -75,7 +75,10 @@ const AvailableStockDetails = () => {
                         </tbody>
                     </table>
                 ) : (
-                    <p>There are no data</p>
+
+                    <div className='mt-5'>
+                        <p>Opps! There are no any stock details to show.</p>
+                    </div>
                 )
             }
 
