@@ -12,7 +12,7 @@ export default function EditVehicleForm() {
     yom: "",
     yor: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start with loading true for initial fetch
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -22,8 +22,24 @@ export default function EditVehicleForm() {
 
   useEffect(() => {
     const fetchVehicle = async () => {
+      if (!vehicleNumberParam) {
+        setError("No vehicle number provided in URL");
+        setLoading(false);
+        return;
+      }
+
+      // Validate vehicle number format
+      const vehicleNumberPattern = /^[A-Za-z0-9]{3}-\d{4}$/;
+      if (!vehicleNumberPattern.test(vehicleNumberParam)) {
+        setError("Invalid vehicle number format. Use XXX-1234 (e.g., ABC-1234)");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch(`http://localhost:8080/api/vehicles/search/${vehicleNumberParam}`);
+        setLoading(true);
+        setError(null);
+        const res = await fetch(`http://localhost:5001/api/vehicles/search/${vehicleNumberParam}`);
         if (res.status === 200) {
           const data = await res.json();
           setFormData({
@@ -34,12 +50,18 @@ export default function EditVehicleForm() {
             yom: data.vehicle_YOM,
             yor: data.vehicle_YOR,
           });
+        } else if (res.status === 404) {
+          setError("Vehicle not found");
+          setTimeout(() => router.push("/editHome"), 2000); // Redirect after 2s
         } else {
-          alert("Vehicle not found");
-          router.push("/editHome");
+          const errorData = await res.json();
+          throw new Error(`HTTP ${res.status}: ${errorData.message || "Failed to fetch vehicle"}`);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Fetch error:", err);
+        setError(err.message || "An unexpected error occurred while fetching vehicle data");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -75,7 +97,7 @@ export default function EditVehicleForm() {
     setError(null);
 
     try {
-      const res = await fetch(`http://localhost:8080/api/vehicles/edit/${formData.vehicleNumber}`, {
+      const res = await fetch(`http://localhost:5001/api/vehicles/edit/${formData.vehicleNumber}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,11 +111,12 @@ export default function EditVehicleForm() {
       if (res.ok) {
         setShowConfirmation(true);
       } else {
-        setError("Error updating vehicle.");
+        const errorData = await res.json();
+        setError(`Error updating vehicle: ${errorData.message || "Unknown error"}`);
       }
     } catch (error) {
-      console.error("Error updating vehicle:", error);
-      setError("An unexpected error occurred.");
+      console.error("Update error:", error);
+      setError("An unexpected error occurred while updating the vehicle");
     } finally {
       setLoading(false);
     }
@@ -104,105 +127,125 @@ export default function EditVehicleForm() {
       <div className="bg-white p-8 rounded-2xl shadow-2xl w-[400px] relative">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-700">Edit Vehicle</h2>
 
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {loading && <p className="text-gray-700 text-center mb-4">Loading vehicle data...</p>}
+        {error && (
+          <p className="text-red-500 text-center mb-4">
+            {error}
+            {!error.includes("not found") && (
+              <button
+                onClick={() => vehicleNumberParam && fetchVehicle()}
+                className="ml-2 text-blue-500 underline"
+              >
+                Retry
+              </button>
+            )}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Vehicle Number (read-only) */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Vehicle Number:</label>
-            <input
-              type="text"
-              name="vehicleNumber"
-              value={formData.vehicleNumber}
-              readOnly
-              className="w-full px-4 py-2 border rounded-xl bg-gray-200 text-black shadow-sm"
-            />
-          </div>
+        {!loading && formData.vehicleNumber && (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Vehicle Number (read-only) */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Vehicle Number:</label>
+              <input
+                type="text"
+                name="vehicleNumber"
+                value={formData.vehicleNumber}
+                readOnly
+                className="w-full px-4 py-2 border rounded-xl bg-gray-200 text-black shadow-sm"
+              />
+            </div>
 
-          {/* Model */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Model:</label>
-            <input
-              type="text"
-              name="model"
-              value={formData.model}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-            />
-          </div>
+            {/* Model */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Model:</label>
+              <input
+                type="text"
+                name="model"
+                value={formData.model}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
+                required
+              />
+            </div>
 
-          {/* Make */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Make:</label>
-            <input
-              type="text"
-              name="make"
-              value={formData.make}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-            />
-          </div>
+            {/* Make */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Make:</label>
+              <input
+                type="text"
+                name="make"
+                value={formData.make}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
+                required
+              />
+            </div>
 
-          {/* Colour */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Colour:</label>
-            <input
-              type="text"
-              name="colour"
-              value={formData.colour}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-            />
-          </div>
+            {/* Colour */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Colour:</label>
+              <input
+                type="text"
+                name="colour"
+                value={formData.colour}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
+                required
+              />
+            </div>
 
-          {/* YOM */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Year of Manufacture (YOM):</label>
-            <input
-              type="number"
-              name="yom"
-              value={formData.yom}
-              onChange={handleChange}
-              min="1900"
-              max={new Date().getFullYear()}
-              className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-            />
-          </div>
+            {/* YOM */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Year of Manufacture (YOM):</label>
+              <input
+                type="number"
+                name="yom"
+                value={formData.yom}
+                onChange={handleChange}
+                min="1900"
+                max={new Date().getFullYear()}
+                className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
+                required
+              />
+            </div>
 
-          {/* YOR */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-1">Year of Registration (YOR):</label>
-            <input
-              type="number"
-              name="yor"
-              value={formData.yor}
-              onChange={handleChange}
-              min="1900"
-              max={new Date().getFullYear()}
-              className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
-            />
-          </div>
+            {/* YOR */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Year of Registration (YOR):</label>
+              <input
+                type="number"
+                name="yor"
+                value={formData.yor}
+                onChange={handleChange}
+                min="1900"
+                max={new Date().getFullYear()}
+                className="w-full px-4 py-2 border rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
+                required
+              />
+            </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 rounded-xl text-white transition transform hover:scale-105 ${
-              loading ? "bg-purple-300 cursor-not-allowed" : "bg-purple-500 hover:bg-purple-600"
-            }`}
-          >
-            {loading ? "Updating..." : "Update"}
-          </button>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-2 rounded-xl text-white transition transform hover:scale-105 ${
+                loading ? "bg-purple-300 cursor-not-allowed" : "bg-purple-500 hover:bg-purple-600"
+              }`}
+            >
+              {loading ? "Updating..." : "Update"}
+            </button>
 
-          {/* Back Button */}
-          <button
-            type="button"
-            onClick={() => router.push("/editHome")}
-            className="w-full bg-gray-500 text-white py-2 rounded-xl mt-2 hover:bg-gray-600 transition transform hover:scale-105"
-          >
-            Back
-          </button>
-        </form>
+            {/* Back Button */}
+            <button
+              type="button"
+              onClick={() => router.push("/editHome")}
+              className="w-full bg-gray-500 text-white py-2 rounded-xl mt-2 hover:bg-gray-600 transition transform hover:scale-105"
+            >
+              Back
+            </button>
+          </form>
+        )}
 
         {/* Confirmation Modal */}
         {showConfirmation && (

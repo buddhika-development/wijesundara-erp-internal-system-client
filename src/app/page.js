@@ -10,7 +10,7 @@ const buttons = [
   { label: "Maintenance", image: "/images/maintenance.webp", route: "/maintenance" },
   { label: "Fuel & Mileage", image: "/images/fuel.jpg", route: "/fuel" },
   { label: "Search Data", image: "/images/search.jpeg", route: "/search" },
-  { label: "Statistics", image: "/images/statistics.jpg", centered: true },
+  { label: "Statistics", image: "/images/statistics.jpg", route: "/statistics",centered: true },
 ];
 
 export default function VehicleManagementPage() {

@@ -36,7 +36,7 @@ export default function DeleteVehicleForm() {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/vehicles/delete/${formData.vehicleNumber}`, {
+      const response = await fetch(`http://localhost:5001/api/vehicles/delete/${formData.vehicleNumber}`, {
         method: "DELETE",
       });
 

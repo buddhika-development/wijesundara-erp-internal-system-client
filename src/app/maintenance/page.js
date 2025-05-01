@@ -41,7 +41,7 @@ export default function MaintenanceVehicleForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/vehicle-maintenance/add', formData);
+      const response = await axios.post('http://localhost:5001/api/vehicle-maintenance/add', formData);
       alert(response.data.message);
       router.push("/");
     } catch (error) {

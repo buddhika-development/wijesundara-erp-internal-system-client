@@ -48,7 +48,7 @@ export default function FuelMilageVehicleForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/vehicle-fuel/add', formData);
+      const response = await axios.post('http://localhost:5001/api/vehicle-fuel/add', formData);
       alert(response.data.message);
       router.push("/");
     } catch (error) {

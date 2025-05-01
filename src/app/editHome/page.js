@@ -16,7 +16,7 @@ export default function EditVehicleForm() {
     }
 
     try {
-      const res = await fetch(`http://localhost:8080/api/vehicles/search/${vehicleNumber}`);
+      const res = await fetch(`http://localhost:5001/api/vehicles/search/${vehicleNumber}`);
       if (res.status === 200) {
         const vehicleData = await res.json();
         // Redirect to edit page with vehicle data
