@@ -44,7 +44,7 @@ export const MainNavigations = [
     },
     {
         'link-content' : 'Notifications',
-        'link': `${WEBSITE_URI}/StockManager/StockMissMatchComplain`,
+        'link': `${WEBSITE_URI}/StockManager/Notifications`,
         'icon' : <MdOutlineNotifications />
     }
     // {

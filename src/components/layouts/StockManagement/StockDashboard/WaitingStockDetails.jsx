@@ -43,7 +43,7 @@ const WaitingStockDetails = () => {
   return (
     <div className='table-content w-full'>
 
-        <Title title_content='Stocks are in processing' />
+        <Title title_content='Stocks are in waiting to process' />
 
         {
             isLoading ? (

@@ -1,6 +1,7 @@
 "use client"
 
 import Title from '@/components/ui/Titles/Title'
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { GiConfirmed } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
@@ -98,7 +99,7 @@ const PendingConfirmations = () => {
                                                     <td>{travel["transportaion_task_assignment"]["transportation_driver_name"]}</td>
                                                     <td>{travel["transportaion_task_assignment"]["transportation_contact_number"]}</td>
                                                     <td className='flex gap-x-2 mt-[4px]'>
-                                                        <button className='bg-red-100 border-[1px] rounded-xl border-red-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center'><MdErrorOutline className='w-[20px] h-[20px] text-red-800' /></button>
+                                                        <Link className='bg-red-100 border-[1px] rounded-xl border-red-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center' href={'http://localhost:3000/StockManager/StockMissMatchComplain'}><MdErrorOutline className='w-[20px] h-[20px] text-red-800' /></Link>
 
                                                         <button onClick={() => orderArrivalConfirmation(travel["transport_task"]["_id"])} className='bg-green-100 border-[1px] rounded-xl border-green-200 w-[40px] h-[40px] cursor-pointer flex justify-center items-center' ><GiConfirmed className='h-[20px] w-[20px] text-green-800' /></button>
                                                     </td>
