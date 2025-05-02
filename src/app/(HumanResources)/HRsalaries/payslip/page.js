@@ -85,25 +85,25 @@ export default function GetPayslip() {
     try {
       const logoUrl = "/companylogo.png";
       const { data, width, height } = await loadImage(logoUrl);
-      const maxHeight = 30; // Max logo height
+      const maxHeight = 30;
       const aspectRatio = width / height;
-      logoHeight = maxHeight; // Fixed height
-      const logoWidth = logoHeight * aspectRatio; // Maintain aspect ratio
-      doc.addImage(data, "PNG", 10, startY, logoWidth, logoHeight); // Logo on the left
+      logoHeight = maxHeight; 
+      const logoWidth = logoHeight * aspectRatio;
+      doc.addImage(data, "PNG", 10, startY, logoWidth, logoHeight);
     } catch (error) {
       console.error("Error loading logo:", error);
-      logoHeight = 30; // Fallback height if logo fails
+      logoHeight = 30;
     }
 
-    // Company Details (right-aligned)
+
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.text("Cosmo Exports Lanka (PVT) LTD", 200, startY + 5, { align: "right" });
+    doc.text("Wijesundara Rice Mills (PVT) LTD", 200, startY + 5, { align: "right" });
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.text("Phone: +94 77 086 4011 / +94 11 275 2373", 200, startY + 10, { align: "right" });
     doc.text("496/1, Naduhena, Meegoda, Sri Lanka", 200, startY + 15, { align: "right" });
-    doc.text("Email: cosmoexportslanka@gmail.com", 200, startY + 20, { align: "right" });
+    doc.text("Email: wijesundaraRiceMills@outlook.com", 200, startY + 20, { align: "right" });
     startY += logoHeight + 5;
 
     // Title
@@ -142,11 +142,11 @@ export default function GetPayslip() {
         ["4", "Extra Days", payslipData.extraDays.toString()],
         ["5", "Attendance Bonus", `LKR ${payslipData.attendanceBonus.toLocaleString()}`],
         ["6", "Monthly Bonus", `LKR ${payslipData.monthlyBonus.toLocaleString()}`],
-        ["7", "Employee EPF", `LKR ${payslipData.employeeEPF.toLocaleString()}`],
-        ["8", "Employer EPF", `LKR ${payslipData.employerEPF.toLocaleString()}`],
-        ["9", "Employer ETF", `LKR ${payslipData.employerETF.toLocaleString()}`],
+        ["7", "Employee EPF", ` LKR ${payslipData.employeeEPF.toLocaleString()}`],
+        ["8", "Employer EPF", ` - LKR ${payslipData.employerEPF.toLocaleString()}`],
+        ["9", "Employer ETF", ` - LKR ${payslipData.employerETF.toLocaleString()}`],
         ["10", "Net Salary", { content: `LKR ${payslipData.netSalary.toLocaleString()}`, styles: { fontStyle: "bold" } }],
-        ["11", "Total Employer Cost", `LKR ${payslipData.totalEmployerCost.toLocaleString()}`],
+        // ["11", "Total Employer Cost", `LKR ${payslipData.totalEmployerCost.toLocaleString()}`],
       ],
       theme: "grid",
       styles: { font: "helvetica", fontSize: 10 },
@@ -168,7 +168,7 @@ export default function GetPayslip() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.text(`Net Salary: LKR ${payslipData.netSalary.toLocaleString()}`, 10, startY);
-    doc.text(`Total Employer Cost: LKR ${payslipData.totalEmployerCost.toLocaleString()}`, 10, startY + 5);
+    // doc.text(`Total Employer Cost: LKR ${payslipData.totalEmployerCost.toLocaleString()}`, 10, startY + 5);
     startY += 15;
 
     // Footer
