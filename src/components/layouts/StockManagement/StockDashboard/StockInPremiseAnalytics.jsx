@@ -14,7 +14,7 @@ const StockInPremiseAnalytics = () => {
   useEffect(() => {
     const dataFetching = async () => {
       try {
-        const stockAvailabilityResponse = await fetch('http://localhost:8080/api/stock/availability_stats');
+        const stockAvailabilityResponse = await fetch('http://localhost:5000/api/stock/availability_stats');
 
         if (!stockAvailabilityResponse.ok) {
           throw new Error("Something went wrong while data fetching...");

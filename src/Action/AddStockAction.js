@@ -31,7 +31,7 @@ export const AddStockActionHandler = async (prevState, formData) => {
     const urlEncodedData = new URLSearchParams(data).toString();
     const urlEncodedDataToFinance = new URLSearchParams(financeData).toString()
 
-    const response = await fetch('http://localhost:8080/api/purchase/add_purchase', {
+    const response = await fetch('http://localhost:5000/api/purchase/add_purchase', {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -39,7 +39,7 @@ export const AddStockActionHandler = async (prevState, formData) => {
         body: urlEncodedData
     });
 
-    const financeResponse = await fetch('http://localhost:8080/api/purchase/requestApproval', {
+    const financeResponse = await fetch('http://localhost:5000/api/purchase/requestApproval', {
         method : "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"

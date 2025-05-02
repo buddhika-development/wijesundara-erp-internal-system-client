@@ -18,8 +18,8 @@ const page = () => {
     const fetchIntrastructureData = async () => {
 
       try{
-        const infrastructures_response = await fetch('http://localhost:8080/api/infrastructure')
-        const rice_varient_response = await fetch('http://localhost:8080/api/rice_varient')
+        const infrastructures_response = await fetch('http://localhost:5000/api/infrastructure')
+        const rice_varient_response = await fetch('http://localhost:5000/api/rice_varient')
 
         if(!infrastructures_response.ok && !rice_varient_response.ok) {
           throw new Error("Something bad happen in data fetching process...")

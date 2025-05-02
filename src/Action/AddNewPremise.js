@@ -46,7 +46,7 @@ export const AddNewPremise = async (prevState, formData) => {
     
     const urlencodedData = new URLSearchParams(data).toString()
 
-    const response = await fetch('http://localhost:8080/api/infrastructure', {
+    const response = await fetch('http://localhost:5000/api/infrastructure', {
         method: 'POST',
         headers : {
             'Content-Type' : 'application/x-www-form-urlencoded'

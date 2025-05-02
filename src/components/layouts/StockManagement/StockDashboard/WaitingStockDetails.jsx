@@ -14,7 +14,7 @@ const WaitingStockDetails = () => {
         const fetch_data = async () => {
             try{
 
-                const stock_response = await fetch('http://localhost:8080/api/stock/availability_stats')
+                const stock_response = await fetch('http://localhost:5000/api/stock/availability_stats')
 
                 if(!stock_response.ok) {
                     throw new Error("Data fetching falled...")

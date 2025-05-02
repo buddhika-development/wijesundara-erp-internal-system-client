@@ -22,7 +22,7 @@ const FullPendingConfirmation = () => {
         const fetch_date = async () => {
 
             try {
-                const response = await fetch('http://localhost:8080/api/transportaion_task/trasnportation_task_assginment/stats')
+                const response = await fetch('http://localhost:5000/api/transportaion_task/trasnportation_task_assginment/stats')
 
                 if (!response.ok) {
                     throw new Error("Something went wrong.....")
@@ -50,7 +50,7 @@ const FullPendingConfirmation = () => {
 
         const fetchData = async() => {
             try{
-                const waitingTransportationRequestsResponse = await fetch('http://localhost:8080/api/transportaion_task/transportation_tasks/waiting')
+                const waitingTransportationRequestsResponse = await fetch('http://localhost:5000/api/transportaion_task/transportation_tasks/waiting')
 
                 if(!waitingTransportationRequestsResponse.ok) {
                     throw new Error("Data fetching processing process failed...")

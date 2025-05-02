@@ -14,7 +14,7 @@ const page = () => {
         const fetchData = async () => {
 
             try{
-                const response = await fetch("http://localhost:8080/api/stock/availability_stats")
+                const response = await fetch("http://localhost:5000/api/stock/availability_stats")
 
                 if(!response.ok) {
                     throw new Error("Something went wron in data fetching process,...")

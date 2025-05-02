@@ -13,7 +13,7 @@ const page = () => {
 
     const fetch_data = async () => {
       try{
-        const infrastructures_response = await fetch('http://localhost:8080/api/infrastructure')
+        const infrastructures_response = await fetch('http://localhost:5000/api/infrastructure')
 
         if(!infrastructures_response.ok) {
           throw new Error("Something went wrong in data fetching...")

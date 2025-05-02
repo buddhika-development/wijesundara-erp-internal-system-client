@@ -15,7 +15,7 @@ const FullStockPurchaseRquestDetails = () => {
     useEffect(() => {
         const fetch_data = async () => {
             try {
-                const stockPurchaseRequest = await fetch('http://localhost:8080/api/purchase/purchase_stats')
+                const stockPurchaseRequest = await fetch('http://localhost:5000/api/purchase/purchase_stats')
 
                 if (stockPurchaseRequest.ok) {
                     const stockPurchaseRequestsResponse = await stockPurchaseRequest.json()
@@ -45,7 +45,7 @@ const FullStockPurchaseRquestDetails = () => {
             const user_confirmation = window.confirm('Do you need to continue process of remove stock purchasing request ? ')
 
             if (user_confirmation){
-                const api_end_point = new URL(`http://localhost:8080/api/purchase/purchase/remove/${id}`)
+                const api_end_point = new URL(`http://localhost:5000/api/purchase/purchase/remove/${id}`)
 
                 const response = await fetch(api_end_point, {
                     method : 'DELETE'
