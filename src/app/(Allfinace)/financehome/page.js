@@ -15,7 +15,7 @@ const FinanceDashboard = () => {
 
   const getRequests = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/requests");
+      const response = await axios.get("http://localhost:5000/requests");
       const responseData = response.data.requests || response.data;
       setData(Array.isArray(responseData) ? responseData : [responseData]);
     } catch (error) {
@@ -25,7 +25,7 @@ const FinanceDashboard = () => {
 
   const getRequests4 = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/requests1", { params: newdata1 });
+      const response = await axios.get("http://localhost:5000/requests1", { params: newdata1 });
       const responseData = response.data.requests || response.data;
       setData2(Array.isArray(responseData) ? responseData : [responseData]);
     } catch (error) {
@@ -35,9 +35,9 @@ const FinanceDashboard = () => {
 
   const getRequests2 = async (newdata) => {
     try {
-      const response = await axios.post("http://localhost:8080/pending", newdata);
+      const response = await axios.post("http://localhost:5000/pending", newdata);
       const responseData = response.data.requests || response.data;
-      console.log("hi hi",responseData);
+      console.log("hi hi", responseData);
       setData1(Array.isArray(responseData) ? responseData : [responseData]);
     } catch (error) {
       console.error("Fetching error:", error);
@@ -52,6 +52,38 @@ const FinanceDashboard = () => {
     getRequests2(newdata);
     getRequests4();
   }, []);
+
+  
+  const filterCurrentMonth = (transactions) => {
+    const currentDate = new Date("2025-05-01"); 
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    return transactions.filter(row => {
+      if (!row.date) return false;
+      const transactionDate = new Date(row.date);
+      return transactionDate >= startOfMonth && transactionDate <= endOfMonth;
+    });
+  };
+
+ 
+  const calculateStats = (transactions, secIds) => {
+    return transactions
+      .filter(row => secIds.includes(row.sec_id))
+      .reduce((total, row) => total + (parseFloat(row.amount) || 0), 0);
+  };
+
+  
+  const currentMonthData = filterCurrentMonth(data2);
+
+ 
+  const totalIncome = calculateStats(currentMonthData, ["IN123"]);
+
+  
+  const totalExpenses = calculateStats(currentMonthData, ["ST123", "HR123", "Tra123"]);
+
+
+  const totalBalance = totalIncome - totalExpenses;
 
   const departmentMap = {
     HR123: "HR Department",
@@ -91,37 +123,34 @@ const FinanceDashboard = () => {
       `}</style>
 
       <div className="max-w-5xl mx-auto">
-        
         <div className="h-16 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-3xl font-bold flex items-center px-6 rounded-xl shadow-lg mb-6">
           Finance Dashboard
         </div>
 
-
         <div className="grid grid-cols-2 gap-6 mb-6">
-     
           <div className="bg-white rounded-xl shadow-lg p-6 h-64 flex flex-col">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Balance Summary</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Balance Summary (May 2025)</h2>
             <div className="flex-1 space-y-2">
               <div className="bg-gray-50 rounded-lg p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">💰</span>
                   <span className="text-base font-medium text-gray-600">Total Balance</span>
                 </div>
-                <span className="text-lg font-semibold text-gray-900">LKT 5,200</span>
+                <span className="text-lg font-semibold text-gray-900">LKR {totalBalance.toFixed(2)}</span>
               </div>
               <div className="bg-green-50 rounded-lg p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">📥</span>
                   <span className="text-base font-medium text-green-700">Income</span>
                 </div>
-                <span className="text-lg font-semibold text-green-700">LKR 3,000</span>
+                <span className="text-lg font-semibold text-green-700">LKR {totalIncome.toFixed(2)}</span>
               </div>
               <div className="bg-red-50 rounded-lg p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">📤</span>
                   <span className="text-base font-medium text-red-700">Expenses</span>
                 </div>
-                <span className="text-lg font-semibold text-red-700">LKR 1,800</span>
+                <span className="text-lg font-semibold text-red-700">LKR {totalExpenses.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -148,9 +177,7 @@ const FinanceDashboard = () => {
           </div>
         </div>
 
-     
         <div className="grid grid-cols-2 gap-6">
-         
           <div className="bg-white rounded-xl shadow-lg p-6 h-80 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Notifications</h2>
             <div className="flex-1 overflow-y-auto custom-scroll space-y-3">
@@ -183,7 +210,6 @@ const FinanceDashboard = () => {
             </div>
           </div>
 
-         
           <div className="bg-white rounded-xl shadow-lg p-6 h-80 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Reminders</h2>
             <div className="flex-1 overflow-y-auto custom-scroll space-y-3">
