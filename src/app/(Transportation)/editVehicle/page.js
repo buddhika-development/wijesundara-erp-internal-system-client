@@ -39,7 +39,7 @@ export default function EditVehicleForm() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`http://localhost:5001/api/vehicles/search/${vehicleNumberParam}`);
+        const res = await fetch(`http://localhost:5000/api/vehicles/search/${vehicleNumberParam}`);
         if (res.status === 200) {
           const data = await res.json();
           setFormData({
@@ -97,7 +97,7 @@ export default function EditVehicleForm() {
     setError(null);
 
     try {
-      const res = await fetch(`http://localhost:5001/api/vehicles/edit/${formData.vehicleNumber}`, {
+      const res = await fetch(`http://localhost:5000/api/vehicles/edit/${formData.vehicleNumber}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

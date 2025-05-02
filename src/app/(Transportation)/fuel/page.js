@@ -48,7 +48,7 @@ export default function FuelMilageVehicleForm() {
     }
 
     try {
-      const response = await axios.post('http://localhost:5001/api/vehicle-fuel/add', formData);
+      const response = await axios.post('http://localhost:5000/api/vehicle-fuel/add', formData);
       alert(response.data.message);
       router.push("/");
     } catch (error) {
@@ -133,7 +133,7 @@ export default function FuelMilageVehicleForm() {
           {/* Back Button */}
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/transporthome")}
             className="w-full bg-gray-500 text-white py-2 rounded-xl mt-2 hover:bg-gray-600 transition transform hover:scale-105 cursor-pointer"
           >
             Back

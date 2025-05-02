@@ -36,7 +36,7 @@ export default function DeleteVehicleForm() {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:5001/api/vehicles/delete/${formData.vehicleNumber}`, {
+      const response = await fetch(`http://localhost:5000/api/vehicles/delete/${formData.vehicleNumber}`, {
         method: "DELETE",
       });
 
@@ -91,7 +91,7 @@ export default function DeleteVehicleForm() {
           {/* Back Button */}
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/transporthome")}
             className="w-full bg-gray-500 text-white py-2 rounded-xl mt-2 hover:bg-gray-600 transition transform hover:scale-105"
           >
             Back
@@ -105,7 +105,7 @@ export default function DeleteVehicleForm() {
               <h3 className="text-2xl font-semibold mb-4 text-green-600">Success!</h3>
               <p className="text-gray-700 mb-4">Vehicle deleted successfully.</p>
               <button
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/transporthome")}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition transform hover:scale-105"
               >
                 Go to Dashboard

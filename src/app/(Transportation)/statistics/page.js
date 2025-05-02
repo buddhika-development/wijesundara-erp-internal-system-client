@@ -50,19 +50,19 @@ export default function StatisticsPage() {
         if (maintenanceDateRange[1]) queryParams.append("dateTo", maintenanceDateRange[1].toISOString());
 
         // Fetch vehicles
-        const vehiclesRes = await fetch(`http://localhost:5001/api/vehicles?${queryParams}`);
+        const vehiclesRes = await fetch(`http://localhost:5000/api/vehicles?${queryParams}`);
         if (!vehiclesRes.ok) throw new Error("Failed to fetch vehicles");
         const vehiclesData = await vehiclesRes.json();
         setVehicles(vehiclesData);
 
         // Fetch fuel/mileage records
-        const fuelRes = await fetch(`http://localhost:5001/api/vehicle-fuel?${queryParams}`);
+        const fuelRes = await fetch(`http://localhost:5000/api/vehicle-fuel?${queryParams}`);
         if (!fuelRes.ok) throw new Error("Failed to fetch fuel records");
         const fuelData = await fuelRes.json();
         setFuelRecords(fuelData);
 
         // Fetch maintenance records
-        const maintenanceRes = await fetch(`http://localhost:5001/api/vehicle-maintenance?${queryParams}`);
+        const maintenanceRes = await fetch(`http://localhost:5000/api/vehicle-maintenance?${queryParams}`);
         if (!maintenanceRes.ok) throw new Error("Failed to fetch maintenance records");
         const maintenanceData = await maintenanceRes.json();
         setMaintenanceRecords(maintenanceData);
@@ -606,7 +606,7 @@ export default function StatisticsPage() {
         </button>
         <button
           type="button"
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/transporthome")}
           style={{
             backgroundColor: "#4B5563",
             color: "#FFFFFF",

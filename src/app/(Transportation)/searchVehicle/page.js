@@ -23,7 +23,7 @@ export default function SearchVehicle() {
       setError(null);
 
       try {
-        const response = await fetch(`http://localhost:5001/api/vehicles/search/${vehicleNumber}`);
+        const response = await fetch(`http://localhost:5000/api/vehicles/search/${vehicleNumber}`);
 
         if (!response.ok) {
           throw new Error("Vehicle not found or an error occurred.");
@@ -76,7 +76,7 @@ export default function SearchVehicle() {
         {/* Back Button */}
         <button
           type="button"
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/transporthome")}
           className="w-full bg-gray-500 text-white py-2 rounded-xl mt-6 hover:bg-gray-600 transition transform hover:scale-105 cursor-pointer"
         >
           Back
