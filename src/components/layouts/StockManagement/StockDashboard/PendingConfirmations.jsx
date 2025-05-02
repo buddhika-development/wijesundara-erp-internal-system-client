@@ -17,7 +17,7 @@ const PendingConfirmations = () => {
         const fetch_date = async () => {
 
             try {
-                const response = await fetch('http://localhost:8080/api/transportaion_task/trasnportation_task_assginment/stats')
+                const response = await fetch('http://localhost:5000/api/transportaion_task/trasnportation_task_assginment/stats')
 
                 if (!response.ok) {
                     throw new Error("Something went wrong.....")
