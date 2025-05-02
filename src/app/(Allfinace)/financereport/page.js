@@ -34,13 +34,13 @@ const EnhancedStatisticsDashboard = () => {
   // Fetch data for a given section
   const fetchData = async (sec_id, setData) => {
     try {
-      const approvedResponse = await axios.post("http://localhost:8080/requests2", { sec_id, status: "approved" });
+      const approvedResponse = await axios.post("http://localhost:5000/requests2", { sec_id, status: "approved" });
       const approvedData = Array.isArray(approvedResponse.data.requests) ? approvedResponse.data.requests : [];
 
-      const approveResponse = await axios.post("http://localhost:8080/requests2", { sec_id, status: "approve" });
+      const approveResponse = await axios.post("http://localhost:5000/requests2", { sec_id, status: "approve" });
       const approveData = Array.isArray(approveResponse.data.requests) ? approveResponse.data.requests : [];
 
-      const declinedResponse = await axios.post("http://localhost:8080/requests2", { sec_id, status: "decline" });
+      const declinedResponse = await axios.post("http://localhost:5000/requests2", { sec_id, status: "decline" });
       const declinedData = Array.isArray(declinedResponse.data.requests) ? declinedResponse.data.requests : [];
 
       const allData = [...approvedData, ...approveData, ...declinedData].reduce((acc, item) => {
@@ -64,7 +64,7 @@ const EnhancedStatisticsDashboard = () => {
   // Fetch pending data
   const fetchPendingData = async () => {
     try {
-      const pendingResponse = await axios.post("http://localhost:8080/pending", { sec_id: "ST123" });
+      const pendingResponse = await axios.post("http://localhost:5000/pending", { sec_id: "ST123" });
       const pendingData = Array.isArray(pendingResponse.data) ? pendingResponse.data : [];
       const formattedData = pendingData.map((item) => ({
         ...item,
@@ -83,7 +83,7 @@ const EnhancedStatisticsDashboard = () => {
   const fetchBankData = async () => {
     try {
       const bankPromises = bankAccounts.map(({ value }) =>
-        axios.post("http://localhost:8080/Bank", { bank_id: value })
+        axios.post("http://localhost:5000/Bank", { bank_id: value })
       );
       const responses = await Promise.all(bankPromises);
       const formattedData = responses.map((res, index) => {

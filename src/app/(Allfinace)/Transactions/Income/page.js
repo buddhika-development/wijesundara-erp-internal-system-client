@@ -17,7 +17,7 @@ const SimpleTable = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post("http://localhost:8080/all", newdata);
+      const response = await axios.post("http://localhost:5000/all", newdata);
       const responseData = Array.isArray(response.data.requests || response.data)
         ? response.data.requests || response.data
         : [response.data];
@@ -34,7 +34,7 @@ const SimpleTable = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post("http://localhost:8080/requests2", newdata1);
+      const response = await axios.post("http://localhost:5000/requests2", newdata1);
       const responseData = Array.isArray(response.data.requests || response.data)
         ? response.data.requests || response.data
         : [response.data];
@@ -50,7 +50,7 @@ const SimpleTable = () => {
   const handleAction = async (row) => {
     try {
       const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
-      await axios.post(`http://localhost:8080/api/inaction/${row._id}`, {
+      await axios.post(`http://localhost:5000/api/inaction/${row._id}`, {
         amount: row.amount,
         bankName: Bname.bname,
         status: newdata1.status,

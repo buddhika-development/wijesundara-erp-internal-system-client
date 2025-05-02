@@ -21,7 +21,8 @@ const StatisticsDashboard = () => {
     statusChart: null,
     monthlyChart: null,
     bankChart: null,
-    netAmountChart: null, // Added for Net Amount chart
+    netAmountChart: null,
+    futureTrendChart: null, // Added for Future Economic Growth Trend chart
   });
 
   // Configuration for each section
@@ -41,18 +42,18 @@ const StatisticsDashboard = () => {
   // Fetch data for a given section
   const fetchData = async (sec_id, setData) => {
     try {
-      const pendingResponse = await axios.post("http://localhost:8080/all", { sec_id });
+      const pendingResponse = await axios.post("http://localhost:5000/all", { sec_id });
       const pendingData = Array.isArray(pendingResponse.data.requests) ? pendingResponse.data.requests : [];
 
-      const approvedResponse = await axios.get("http://localhost:8080/requests1");
+      const approvedResponse = await axios.get("http://localhost:5000/requests1");
       const approvedData = Array.isArray(approvedResponse.data.requests)
         ? approvedResponse.data.requests.filter(item => item.sec_id === sec_id)
         : [];
 
-      const approvedReq2Response = await axios.post("http://localhost:8080/requests2", { sec_id, status: "approve" });
+      const approvedReq2Response = await axios.post("http://localhost:5000/requests2", { sec_id, status: "approve" });
       const approvedReq2Data = Array.isArray(approvedReq2Response.data.requests) ? approvedReq2Response.data.requests : [];
 
-      const declinedReq2Response = await axios.post("http://localhost:8080/requests2", { sec_id, status: "decline" });
+      const declinedReq2Response = await axios.post("http://localhost:5000/requests2", { sec_id, status: "decline" });
       const declinedReq2Data = Array.isArray(declinedReq2Response.data.requests) ? declinedReq2Response.data.requests : [];
 
       const allData = [
@@ -79,7 +80,7 @@ const StatisticsDashboard = () => {
   const fetchBankData = async () => {
     try {
       const bankPromises = bankAccounts.map(({ value }) =>
-        axios.post("http://localhost:8080/Bank", { bank_id: value })
+        axios.post("http://localhost:5000/Bank", { bank_id: value })
       );
       const responses = await Promise.all(bankPromises);
       const formattedData = responses.map((res, index) => {
@@ -220,6 +221,36 @@ const StatisticsDashboard = () => {
     });
   };
 
+  // Helper for linear regression to forecast future trends
+  const linearRegression = (x, y) => {
+    const n = x.length;
+    const xSum = x.reduce((a, b) => a + b, 0);
+    const ySum = y.reduce((a, b) => a + b, 0);
+    const xySum = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+    const xSquareSum = x.reduce((sum, xi) => sum + xi * xi, 0);
+
+    const slope = (n * xySum - xSum * ySum) / (n * xSquareSum - xSum * xSum);
+    const intercept = (ySum - slope * xSum) / n;
+
+    return { slope, intercept };
+  };
+
+  // Forecast future values
+  const forecastValues = (historicalMonths, historicalValues, numFutureMonths) => {
+    const x = historicalMonths.map((_, i) => i); // Numerical indices for months (0, 1, 2, ...)
+    const y = historicalValues; // Net amounts
+
+    const { slope, intercept } = linearRegression(x, y);
+
+    const forecastedValues = [];
+    for (let i = x.length; i < x.length + numFutureMonths; i++) {
+      const forecastedValue = slope * i + intercept;
+      forecastedValues.push(forecastedValue);
+    }
+
+    return forecastedValues;
+  };
+
   // Render charts
   useEffect(() => {
     if (!loading && !error) {
@@ -330,7 +361,7 @@ const StatisticsDashboard = () => {
         try {
           destroyChart("monthlyChart");
           chartRefs.current.monthlyChart = new Chart(lineCtx, {
-            type: "line",
+            type :"line",
             data: {
               labels: allMonths,
               datasets: monthlyData.map(({ label, monthly }) => ({
@@ -349,7 +380,7 @@ const StatisticsDashboard = () => {
               plugins: { legend: { labels: { font: { size: 12 } } } },
               maintainAspectRatio: false,
             },
-          });
+        });
         } catch (e) {
           console.error("Error initializing line chart:", e);
         }
@@ -396,7 +427,7 @@ const StatisticsDashboard = () => {
                 label: "Net Amount (LKR)",
                 data: netAmountMonths.map(month => monthlyNet[month].income - monthlyNet[month].expenses),
                 fill: false,
-                borderColor: "#10B981", // Green color to indicate net amount
+                borderColor: "#10B981",
                 tension: 0.1,
               }],
             },
@@ -405,7 +436,7 @@ const StatisticsDashboard = () => {
                 y: { 
                   title: { display: true, text: "Net Amount (LKR)" }, 
                   ticks: { font: { size: 12 } },
-                  beginAtZero: false, // Allow negative values
+                  beginAtZero: false,
                 },
                 x: { 
                   title: { display: true, text: "Month" }, 
@@ -428,6 +459,86 @@ const StatisticsDashboard = () => {
           });
         } catch (e) {
           console.error("Error initializing net amount chart:", e);
+        }
+      }
+
+      // Line Chart: Future Economic Growth Trend
+      if (netAmountMonths.length > 0) {
+        const historicalNetValues = netAmountMonths.map(month => monthlyNet[month].income - monthlyNet[month].expenses);
+        
+        // Generate future months (next 6 months)
+        const lastMonth = new Date(netAmountMonths[netAmountMonths.length - 1]);
+        const futureMonths = [];
+        for (let i = 1; i <= 6; i++) {
+          const futureDate = new Date(lastMonth);
+          futureDate.setMonth(lastMonth.getMonth() + i);
+          futureMonths.push(futureDate.toLocaleString("default", { month: "short", year: "numeric" }));
+        }
+
+        // Forecast future net amounts using linear regression
+        const forecastedValues = forecastValues(netAmountMonths, historicalNetValues, 6);
+        const allMonthsForTrend = [...netAmountMonths, ...futureMonths];
+        const allValuesForTrend = [...historicalNetValues, ...forecastedValues];
+
+        const futureTrendCtx = document.getElementById("futureTrendChart")?.getContext("2d");
+        if (futureTrendCtx) {
+          try {
+            destroyChart("futureTrendChart");
+            chartRefs.current.futureTrendChart = new Chart(futureTrendCtx, {
+              type: "line",
+              data: {
+                labels: allMonthsForTrend,
+                datasets: [
+                  {
+                    label: "Historical Net Amount",
+                    data: allValuesForTrend.map((value, index) => index < netAmountMonths.length ? value : null),
+                    fill: false,
+                    borderColor: "#10B981",
+                    backgroundColor: "#10B981",
+                    tension: 0.1,
+                    pointRadius: 4,
+                  },
+                  {
+                    label: "Forecasted Trend",
+                    data: allValuesForTrend.map((value, index) => index >= netAmountMonths.length - 1 ? value : null),
+                    fill: false,
+                    borderColor: "#F97316",
+                    backgroundColor: "#F97316",
+                    borderDash: [5, 5],
+                    tension: 0.1,
+                    pointRadius: 4,
+                  },
+                ],
+              },
+              options: {
+                scales: {
+                  y: { 
+                    title: { display: true, text: "Net Amount (LKR)" }, 
+                    ticks: { font: { size: 12 } },
+                    beginAtZero: false,
+                  },
+                  x: { 
+                    title: { display: true, text: "Month" }, 
+                    ticks: { font: { size: 12 } } 
+                  },
+                },
+                plugins: { 
+                  legend: { labels: { font: { size: 12 } } },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        return `${context.dataset.label}: LKR ${value.toFixed(2)}`;
+                      },
+                    },
+                  },
+                },
+                maintainAspectRatio: false,
+              },
+            });
+          } catch (e) {
+            console.error("Error initializing future trend chart:", e);
+          }
         }
       }
 
@@ -642,6 +753,12 @@ const StatisticsDashboard = () => {
                 <h2 className="text-lg font-semibold mb-3 text-gray-800">Net Amount Over Time</h2>
                 <div className="h-64">
                   <canvas id="netAmountChart" width="100%" height="100%"></canvas>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow md:col-span-2">
+                <h2 className="text-lg font-semibold mb-3 text-gray-800">Future Economic Growth Trend</h2>
+                <div className="h-80">
+                  <canvas id="futureTrendChart" width="100%" height="100%"></canvas>
                 </div>
               </div>
             </div>

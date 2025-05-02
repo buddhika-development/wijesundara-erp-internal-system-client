@@ -10,6 +10,8 @@ export default function TransactionsPage() {
   const [data1, setData1] = useState([]);
   const [data4, setData4] = useState([]);
   const [total, setTotal] = useState(0);
+  const [notifications, setNotifications] = useState([]); 
+  const [dismissedNotifications, setDismissedNotifications] = useState([]); 
   const newdata1 = { status: "pending" };
 
   const transactionTypes = [
@@ -38,19 +40,32 @@ export default function TransactionsPage() {
 
   const getRequests2 = async (newdata1) => {
     try {
-      const response = await axios.post("http://localhost:8080/pending", newdata1);
+      const response = await axios.post("http://localhost:5000/pending", newdata1);
       const responseData = response.data.requests || response.data;
-      console.log("hi hi",responseData);
+      console.log("hi hi", responseData);
       setData1(Array.isArray(responseData) ? responseData : [responseData]);
+
+    
+      const todayReminders = (Array.isArray(responseData) ? responseData : [responseData]).filter((row) => {
+        if (!row.date) return false;
+        const currentDate = new Date("2025-05-01");
+        const reminderDate = new Date(row.date);
+        return (
+          reminderDate.getFullYear() === currentDate.getFullYear() &&
+          reminderDate.getMonth() === currentDate.getMonth() &&
+          reminderDate.getDate() === currentDate.getDate()
+        );
+      });
+      setNotifications(todayReminders);
     } catch (error) {
       console.error("Fetching error:", error);
     }
   };
-  const bank = async (value) => {
 
+  const bank = async (value) => {
     try {
       console.log("bank acc no", value);
-      const response = await axios.post("http://localhost:8080/Bank", { bank_id: value });
+      const response = await axios.post("http://localhost:5000/Bank", { bank_id: value });
       console.log("Bank API Response:", response.data);
 
       const responseData = response.data || [];
@@ -58,11 +73,10 @@ export default function TransactionsPage() {
       setData4(formattedData);
     } catch (error) {
       console.error("Error calling Bank API:", error);
-    
     } finally {
-     
     }
   };
+
   const departmentMap = {
     HR123: "HR Department",
     Tra123: "Transport Department",
@@ -80,6 +94,11 @@ export default function TransactionsPage() {
     }
   };
 
+ 
+  const dismissNotification = (index) => {
+    setDismissedNotifications((prev) => [...prev, index]);
+  };
+
   useEffect(() => {
     const newTotal = calculateTotal();
     setTotal(newTotal);
@@ -88,7 +107,46 @@ export default function TransactionsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      
+
+      {notifications.length > 0 && (
+        <div className="max-w-4xl mx-auto mb-4 space-y-2">
+          {notifications.map((reminder, index) => {
+            if (dismissedNotifications.includes(index)) return null; 
+            return (
+              <div
+                key={index}
+                className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-md flex justify-between items-center"
+              >
+                <div>
+                  <p className="font-semibold">Reminder Due Today!</p>
+                  <p>
+                    <span className="font-medium">Department:</span>{" "}
+                    {reminder.departmentName ? reminder.sec_id : departmentMap[reminder.sec_id] || "N/A"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Amount:</span>{" "}
+                    <span className="text-green-600">LKR {reminder.amount || "0"}</span>
+                  </p>
+                  <p>
+                    <span className="font-medium">Description:</span>{" "}
+                    {reminder.description || "No description"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Date:</span> {reminder.date || "No date"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => dismissNotification(index)}
+                  className="text-yellow-700 hover:text-yellow-900 font-semibold focus:outline-none"
+                >
+                  ✕
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto">
         <div className="h-16 bg-gradient-to-r from-gray-700 to-gray-900 text-white text-3xl font-bold flex items-center px-6 rounded-xl shadow-lg mb-6">
           Transactions Dashboard

@@ -9,7 +9,7 @@ const FinanceLayout = ({ children }) => {
           { label: "📊", path: "/stat" },
           { label: "💳", path: "/Transactions" },
           { label: "📄", path: "/financereport" },
-          { label: "👤", path: "/profile" },
+        
         ].map((item, index) => (
           <Link
             key={index}
