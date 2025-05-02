@@ -37,7 +37,7 @@ const RequestTransportationService = async (preState, formData) => {
 
     const urlencodedData = new URLSearchParams(data).toString()
 
-    const response = await fetch('http://localhost:8080/api/transportaion_task', {
+    const response = await fetch('http://localhost:5000/api/transportaion_task', {
         method : 'POST',
         headers : {
             'Content-Type' :'application/x-www-form-urlencoded'

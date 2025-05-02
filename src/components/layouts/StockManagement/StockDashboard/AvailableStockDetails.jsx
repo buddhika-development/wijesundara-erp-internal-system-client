@@ -12,7 +12,7 @@ const AvailableStockDetails = () => {
     useEffect(() => {
         const fetch_data = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/stock/availability_stats')
+                const response = await fetch('http://localhost:5000/api/stock/availability_stats')
 
                 if (!response.ok) {
                     throw new Error("Something went wron in data loading...")
@@ -75,7 +75,10 @@ const AvailableStockDetails = () => {
                         </tbody>
                     </table>
                 ) : (
-                    <p>There are no data</p>
+
+                    <div className='mt-5'>
+                        <p>Opps! There are no any stock details to show.</p>
+                    </div>
                 )
             }
 

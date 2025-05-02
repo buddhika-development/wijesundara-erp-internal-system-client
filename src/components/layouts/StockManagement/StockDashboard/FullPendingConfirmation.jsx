@@ -22,7 +22,7 @@ const FullPendingConfirmation = () => {
         const fetch_date = async () => {
 
             try {
-                const response = await fetch('http://localhost:8080/api/transportaion_task/trasnportation_task_assginment/stats')
+                const response = await fetch('http://localhost:5000/api/transportaion_task/trasnportation_task_assginment/stats')
 
                 if (!response.ok) {
                     throw new Error("Something went wrong.....")
@@ -50,7 +50,7 @@ const FullPendingConfirmation = () => {
 
         const fetchData = async() => {
             try{
-                const waitingTransportationRequestsResponse = await fetch('http://localhost:8080/api/transportaion_task/transportation_tasks/waiting')
+                const waitingTransportationRequestsResponse = await fetch('http://localhost:5000/api/transportaion_task/transportation_tasks/waiting')
 
                 if(!waitingTransportationRequestsResponse.ok) {
                     throw new Error("Data fetching processing process failed...")
@@ -67,7 +67,7 @@ const FullPendingConfirmation = () => {
         
         fetchData()
         
-    }, [])
+    }, [pendingTransportationServiceRequests])
 
 
 
@@ -115,6 +115,10 @@ const FullPendingConfirmation = () => {
 
     return (
         <div>
+            {/* waiting transportaion detials */}
+            <PendingConfirmations />
+
+
             {
                 isLoading ? (
                     <p>Loading....</p>
@@ -122,20 +126,19 @@ const FullPendingConfirmation = () => {
                     : error ? (
                         <p>{error}</p>
                     )
-                        : travels.length > 0 ? (
+                        : pendingTransportationServiceRequests.length > 0 ? (
 
                             <div>
 
-                                {/* waiting transportaion detials */}
-                                <PendingConfirmations />
-                                
                                 {/* waiting transportaion request details */}
                                 <PendingTransportationServiceRequestsDetails pendingTransportations={pendingTransportationServiceRequests}/>
                                 
                             </div>
                         )
                             : (
-                                <p>There are no valid data...</p>
+                                <div className='table-content mt-5'>
+                                    <p>Ooops! There are no any details to show.</p>
+                                </div>
                             )
             }
 

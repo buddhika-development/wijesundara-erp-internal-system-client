@@ -18,7 +18,7 @@ const StockTransporationStats = () => {
 
         const fetch_data = async () => {
             try{
-                const response = await fetch("http://localhost:8080/api/transportaion_task")
+                const response = await fetch("http://localhost:5000/api/transportaion_task")
                 
                 if(!response.ok) {
                     throw new Error("Something went wrong in data processing");

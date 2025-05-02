@@ -14,7 +14,7 @@ const StockInPremiseAnalytics = () => {
   useEffect(() => {
     const dataFetching = async () => {
       try {
-        const stockAvailabilityResponse = await fetch('http://localhost:8080/api/stock/availability_stats');
+        const stockAvailabilityResponse = await fetch('http://localhost:5000/api/stock/availability_stats');
 
         if (!stockAvailabilityResponse.ok) {
           throw new Error("Something went wrong while data fetching...");
@@ -78,7 +78,10 @@ const StockInPremiseAnalytics = () => {
 
   if (error) return <div className="text-red-500 p-4">Error loading stock data: {error.message}</div>;
 
-  if (availableStockDetails.length === 0) return <div className="p-4">No stock data available.</div>;
+  if (availableStockDetails.length === 0) return <div className="p-4 table-content mt-5 w-full">
+    <Title title_content='Premises Stock Availability' />
+    <p className='mt-4'>There are no data to show the statistics</p>
+  </div>;
 
   return (
     <div className="p-7 bg-white rounded-lg w-1/2 shadow-md mt-5">

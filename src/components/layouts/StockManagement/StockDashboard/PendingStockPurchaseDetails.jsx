@@ -13,7 +13,7 @@ const PendingStockPurchaseDetails = () => {
     useEffect(() => {
         const fetch_data = async () => {
             try {
-                const pendingStockPurchaseRequest = await fetch('http://localhost:8080/api/purchase/purchase_stats')
+                const pendingStockPurchaseRequest = await fetch('http://localhost:5000/api/purchase/purchase_stats')
 
                 if (pendingStockPurchaseRequest.ok) {
                     const pendingStockPurchase = await pendingStockPurchaseRequest.json()
@@ -45,7 +45,7 @@ const PendingStockPurchaseDetails = () => {
             const user_confirmation = window.confirm('Do you need to continue process of remove stock purchasing request ? ')
 
             if (user_confirmation){
-                const api_end_point = new URL(`http://localhost:8080/api/purchase/purchase/remove/${id}`)
+                const api_end_point = new URL(`http://localhost:5000/api/purchase/purchase/remove/${id}`)
 
                 const response = await fetch(api_end_point, {
                     method : 'DELETE'
@@ -67,7 +67,8 @@ const PendingStockPurchaseDetails = () => {
     }
 
     return (
-        <div>
+        <div className='table-content w-full mt-5'>
+            <Title title_content='Pending Stock Purchasing Approvals' />
 
             {
                 isLoading ? (
@@ -77,8 +78,7 @@ const PendingStockPurchaseDetails = () => {
                         <p>{error}</p>
                     )
                         : pendingStockPurchase.length > 0 ? (
-                            <div className='table-content w-full mt-5'>
-                                <Title title_content='Pending Stock Purchasing Approvals' />
+                            <div>
 
                                 {/* table of available stock detials */}
                                 <table className='w-full text-left mt-[20px]'>
@@ -119,7 +119,10 @@ const PendingStockPurchaseDetails = () => {
                             </div>
                         )
                             : (
-                                <p>There are not data</p>
+
+                                <div className='mt-5'>
+                                    <p>Opps! There are no any pending stock purchases.</p>
+                                </div>
                             )
             }
 

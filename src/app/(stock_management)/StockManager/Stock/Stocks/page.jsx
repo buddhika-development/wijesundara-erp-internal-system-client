@@ -37,7 +37,7 @@ const page = () => {
   }, [])
 
   return (
-    <div>
+    <div className='table-content mt-5'>
 
       {/* Header section => section title */}
       <Title title_content='Stock Details' />
@@ -51,7 +51,7 @@ const page = () => {
             <p>{error}</p>
           )
             : stocks.length > 0 ? (
-              <div className='table-content mt-5'>
+              <div>
                 <table className='w-full mt-6 text-left'>
                   <thead>
                     <tr className='common-border'>
@@ -77,7 +77,10 @@ const page = () => {
               </div>
             )
             :(
-              <p>There are no valid data</p>
+
+              <div className='mt-5'>
+                <p>Opps! there are no any stock details.</p>
+              </div>
             )
       }
 

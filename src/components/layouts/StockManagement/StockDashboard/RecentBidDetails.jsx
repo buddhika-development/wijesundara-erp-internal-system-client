@@ -14,7 +14,7 @@ const RecentBidDetails = () => {
 
         const fetchBidDetails = async () => {
             try {
-                const bid_response = await fetch('http://localhost:8080/api/bids')
+                const bid_response = await fetch('http://localhost:5000/api/bids')
 
                 if (!bid_response.ok) {
                     throw new Error('Data fetching error....')

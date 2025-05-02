@@ -17,7 +17,7 @@ const PendingConfirmations = () => {
         const fetch_date = async () => {
 
             try {
-                const response = await fetch('http://localhost:8080/api/transportaion_task/trasnportation_task_assginment/stats')
+                const response = await fetch('http://localhost:5000/api/transportaion_task/trasnportation_task_assginment/stats')
 
                 if (!response.ok) {
                     throw new Error("Something went wrong.....")
@@ -46,7 +46,7 @@ const PendingConfirmations = () => {
         const userConfirmation = confirm("Confirm the stock arrivals ? ")
         if (userConfirmation) {
 
-            const end_point_url = new URL(`http://localhost:8080/api/transportaion_task/update_task/${task_id}`)
+            const end_point_url = new URL(`http://localhost:5000/api/transportaion_task/update_task/${task_id}`)
             const response = await fetch(end_point_url, {
                 method: "PATCH"
             })
@@ -62,7 +62,9 @@ const PendingConfirmations = () => {
 
 
     return (
-        <div>
+        <div className='table-content w-full mt-5'>
+            <Title title_content='Pending confirmations' />
+
             {
                 isLoading ? (
                     <p>Loading....</p>
@@ -71,8 +73,7 @@ const PendingConfirmations = () => {
                         <p>{error}</p>
                     )
                         : travels.length > 0 ? (
-                            <div className='table-content w-full mt-5'>
-                                <Title title_content='Pending confirmations' />
+                            <div>
 
                                 {/* table of available stock detials */}
                                 <table className='w-full text-left mt-[20px]'>
@@ -113,7 +114,9 @@ const PendingConfirmations = () => {
                             </div>
                         )
                             : (
-                                <p>There are no valid data...</p>
+                                <div className='mt-5'>
+                                    <p>Wow! there are no any transporation confimations.</p>
+                                </div>
                             )
             }
 
