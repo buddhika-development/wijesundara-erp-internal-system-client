@@ -8,7 +8,7 @@ import { FaChartLine } from "react-icons/fa6";
 import { MdOutlineNotifications } from "react-icons/md";
 
 // extract website link
-const WEBSITE_URI = process.env.SITE_URI
+const WEBSITE_URI = process.env.SITE_URI || 'http://localhost:3000'
 
 export const MainNavigations = [
     {

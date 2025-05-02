@@ -4,7 +4,6 @@ import { MainNavigations } from "@/Navigations"
 
 const HrManagementLayout = ({children}) => {
 
-    const STOCK_MANAGER_NAVIGATIONS = MainNavigations
     
     return(
         <div className="h-full">
