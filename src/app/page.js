@@ -41,5 +41,5 @@ export default function VehicleManagementPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }
