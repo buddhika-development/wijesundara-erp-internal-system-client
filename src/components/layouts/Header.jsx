@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <div className='h-[60px] w-full flex justify-between items-center px-[40px] common-border bg-white fixed top-0 left-0'>
         <CompanyLogo />
-        <UserAccountDetails />
+        <UserAccountDetails employee_name='Buddhika Madusanka' employee_department='Stock Management' />
     </div>
   )
 }
