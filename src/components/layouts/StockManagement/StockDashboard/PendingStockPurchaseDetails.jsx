@@ -1,0 +1,133 @@
+"use client"
+
+import Title from '@/components/ui/Titles/Title'
+import React, { useEffect, useState } from 'react'
+import { MdDeleteOutline } from "react-icons/md";
+
+const PendingStockPurchaseDetails = () => {
+
+    const [pendingStockPurchase, setPendingStockPurchase] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        const fetch_data = async () => {
+            try {
+                const pendingStockPurchaseRequest = await fetch('http://localhost:5000/api/purchase/purchase_stats')
+
+                if (pendingStockPurchaseRequest.ok) {
+                    const pendingStockPurchase = await pendingStockPurchaseRequest.json()
+
+                    const temp_data = pendingStockPurchase.filter((pendingStock) => pendingStock["purchase_details"]["purchase_status"] == "pending").slice(0, 12)
+                    setPendingStockPurchase(temp_data)
+                }
+                else {
+                    throw new Error("Something went wrong in data fetching.....")
+                }
+            }
+            catch (err) {
+                console.log('Something went wrong....')
+                setError(err)
+            }
+            finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetch_data()
+    }, [pendingStockPurchase])
+
+
+    // function related to remove the element from the database
+    const remove_purchase_request = async (id) => {
+
+        try{
+            const user_confirmation = window.confirm('Do you need to continue process of remove stock purchasing request ? ')
+
+            if (user_confirmation){
+                const api_end_point = new URL(`http://localhost:5000/api/purchase/purchase/remove/${id}`)
+
+                const response = await fetch(api_end_point, {
+                    method : 'DELETE'
+                })
+
+                if (response.ok) {
+                    alert('sucess')
+                }
+                else{
+                    alert('something went wrong')
+                }
+            }
+            
+        }   
+        catch(err){
+            console.log(`Something went wrong in the process of remove requested purchase.. ${err} `)
+        }
+        
+    }
+
+    return (
+        <div className='table-content w-full mt-5'>
+            <Title title_content='Pending Stock Purchasing Approvals' />
+
+            {
+                isLoading ? (
+                    <p>Loading....</p>
+                )
+                    : error ? (
+                        <p>{error}</p>
+                    )
+                        : pendingStockPurchase.length > 0 ? (
+                            <div>
+
+                                {/* table of available stock detials */}
+                                <table className='w-full text-left mt-[20px]'>
+                                    <thead className='border-0'>
+                                        <tr>
+                                            <th>Checkout Date</th>
+                                            <th>Supplier name</th>
+                                            <th>Stock Amount</th>
+                                            <th>Contact Number</th>
+                                            <th>Suplied location</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {
+                                            pendingStockPurchase.map((stock, index) => (
+                                                <tr key={index}>
+                                                    <td>{stock["purchase_details"]["purchase_date"].split('T')[0]}</td>
+                                                    <td>{stock["supplier"]['supplier_name']}</td>
+                                                    <td>{`${stock["purchase_details"]['stock_amount']} kg`}</td>
+                                                    <td>{stock["supplier"]['supplier_contact']}</td>
+                                                    <td>{`${stock["supplier"]['supplier_address_line_one']} , ${stock["supplier"]['supplier_address_line_two']} , ${stock["supplier"]['supplier_address_city']}`}</td>
+                                                    <td>
+                                                        <button 
+                                                            className='w-[32px] h-[32px] flex justify-center items-center text-[16px] bg-red-100 text-red-900 rounded-md border-[1px] border-red-200 cursor-pointer'
+                                                            onClick={() => { remove_purchase_request(stock["purchase_details"]["_id"])}}
+                                                        >
+                                                            <MdDeleteOutline/>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        )
+                            : (
+
+                                <div className='mt-5'>
+                                    <p>Opps! There are no any pending stock purchases.</p>
+                                </div>
+                            )
+            }
+
+        </div>
+    )
+}
+
+export default PendingStockPurchaseDetails
