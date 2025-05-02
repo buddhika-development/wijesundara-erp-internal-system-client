@@ -15,6 +15,10 @@ export default function FuelMilageVehicleForm() {
   const router = useRouter();
 
   const handleChange = (e) => {
+    // Restrict vehicle number to 8 characters max
+    if (e.target.name === "vehicleNumber" && e.target.value.length > 8) {
+      return; // prevent typing beyond 8 chars
+    }
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -26,13 +30,32 @@ export default function FuelMilageVehicleForm() {
       return;
     }
 
+    // Vehicle number length check
+    if (formData.vehicleNumber.length > 8) {
+      alert("Vehicle number must be 8 characters or less.");
+      return;
+    }
+
+    // Date Validation - no future dates
+    const selectedDate = new Date(formData.date);
+    const today = new Date();
+    selectedDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+      alert("Future dates are not allowed. Please select today or a past date.");
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:8080/api/vehicle-fuel/add', formData); // ✅ Correct URL
+      const response = await axios.post('http://localhost:5001/api/vehicle-fuel/add', formData);
       alert(response.data.message);
       router.push("/");
     } catch (error) {
       if (error.response && error.response.status === 404) {
         alert(error.response.data.message); // Vehicle not found
+      } else if (error.response && error.response.status === 400) {
+        alert(error.response.data.message); // Validation error
       } else {
         alert("Error adding fuel/mileage data. Please try again.");
       }
@@ -53,9 +76,11 @@ export default function FuelMilageVehicleForm() {
               name="vehicleNumber"
               value={formData.vehicleNumber}
               onChange={handleChange}
+              maxLength={8} // Also enforce max length
               required
               className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-sm"
             />
+            <p className="text-sm text-gray-500">Max 8 characters</p>
           </div>
 
           {/* Fuel Cost */}

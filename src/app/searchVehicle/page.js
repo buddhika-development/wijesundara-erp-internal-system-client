@@ -23,7 +23,7 @@ export default function SearchVehicle() {
       setError(null);
 
       try {
-        const response = await fetch(`http://localhost:8080/api/vehicles/search/${vehicleNumber}`);
+        const response = await fetch(`http://localhost:5001/api/vehicles/search/${vehicleNumber}`);
 
         if (!response.ok) {
           throw new Error("Vehicle not found or an error occurred.");
