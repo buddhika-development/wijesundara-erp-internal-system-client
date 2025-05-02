@@ -13,6 +13,11 @@ const userLogins = [
         'user_name' : 'hrmanager',
         'user_password' : '12345',
         'destination' : 'http://localhost:3000/HR-home'
+    },
+    {
+        'user_name' : 'ashika',
+        'user_password' : '12345',
+        'destination' : 'http://localhost:3000/transporthome'
     }
 
 ]

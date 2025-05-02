@@ -13,7 +13,7 @@ const page = () => {
     const fetch_data = async () => {
 
       try {
-        const stock_reponse = await fetch('http://localhost:8080/api/stock/availability_stats')
+        const stock_reponse = await fetch('http://localhost:5000/api/stock/availability_stats')
 
         if (!stock_reponse.ok) {
           throw new Error("Something went wrong while data fetchig...")

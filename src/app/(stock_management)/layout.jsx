@@ -2,6 +2,11 @@ import Header from "@/components/layouts/Header"
 import Sidebar from "@/components/layouts/StockManagement/Sidebar"
 import { MainNavigations } from "@/Navigations"
 
+
+export const metadata = {
+    title: "Stock Management | Wijesundara RiceMill",
+};
+
 const StockManagementLayout = ({children}) => {
 
     const STOCK_MANAGER_NAVIGATIONS = MainNavigations
