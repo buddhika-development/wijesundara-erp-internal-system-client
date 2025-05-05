@@ -1,4 +1,4 @@
-import Header from "@/components/layouts/HeaderTishan"
+import Header from "@/components/layouts/HeaderAshika"
 // import Sidebar from "@/components/layouts/StockManagement/Sidebar"
 import { MainNavigations } from "@/Navigations"
 

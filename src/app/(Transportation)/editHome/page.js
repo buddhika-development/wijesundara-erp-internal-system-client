@@ -16,7 +16,7 @@ export default function EditVehicleForm() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5001/api/vehicles/search/${vehicleNumber}`);
+      const res = await fetch(`http://localhost:5000/api/vehicles/search/${vehicleNumber}`);
       if (res.status === 200) {
         const vehicleData = await res.json();
         // Redirect to edit page with vehicle data
@@ -56,7 +56,7 @@ export default function EditVehicleForm() {
 
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/transporthome")}
             className="w-full bg-gray-500 text-white py-2 rounded-xl mt-2 hover:bg-gray-600 transition transform hover:scale-105 cursor-pointer"
           >
             Back

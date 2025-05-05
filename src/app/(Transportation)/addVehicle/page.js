@@ -71,7 +71,7 @@ export default function AddVehicleForm() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:5001/api/vehicles/add", {
+      const response = await fetch("http://localhost:5000/api/vehicles/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submissionData),
@@ -229,7 +229,7 @@ export default function AddVehicleForm() {
           {/* Back Button */}
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/transporthome")}
             className="w-full bg-gray-500 text-white py-2 rounded-xl mt-2 hover:bg-gray-600 transition transform hover:scale-105"
           >
             Back
@@ -243,7 +243,7 @@ export default function AddVehicleForm() {
               <h3 className="text-2xl font-semibold mb-4 text-green-600">Success!</h3>
               <p className="text-gray-700 mb-4">Vehicle registered successfully.</p>
               <button
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/transporthome")}
                 className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition transform hover:scale-105"
               >
                 Go to Dashboard
